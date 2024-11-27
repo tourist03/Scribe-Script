@@ -1,0 +1,15 @@
+{
+  "name": "scribespace-backend",
+  "version": "1.0.0",
+  "description": "ScribeSpace: A versatile cloud-based platform for seamless writing and drawing, enabling creativity and productivity anytime, anywhere.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tourist03",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3"
+  }
+}
