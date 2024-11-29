@@ -23,6 +23,7 @@ router.post(
     if (!error.isEmpty()) {
       return res.status(400).json({ error: error.array() });
     }
+    
     //if user already exist return error and bad request
 
     try {
@@ -115,4 +116,5 @@ router.post("/getuser", fetchUser , async (req, res) => {
     res.status(500).send("Internal server Error Occured");
   }
 });
+
 module.exports = router;
