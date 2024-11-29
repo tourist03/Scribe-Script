@@ -23,7 +23,7 @@ router.post(
     if (!error.isEmpty()) {
       return res.status(400).json({ error: error.array() });
     }
-    
+
     //if user already exist return error and bad request
 
     try {
@@ -106,7 +106,7 @@ router.post(
 
 //Route 3 : Get LoggedIn user Details : POST "/api/auth/getuser" , Login required
 
-router.post("/getuser", fetchUser , async (req, res) => {
+router.post("/getuser", fetchUser, async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId);
