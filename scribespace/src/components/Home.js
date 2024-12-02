@@ -1,11 +1,13 @@
 import React from "react";
+import Notes from "./Notes";
 
 const Home = () => {
+
   return (
     <div>
       <div className="container my-3">
         <h2>ScribeSpace - Add Note</h2>
-        <form className = "my-3">
+        <form className="my-3">
           <div className="mb-3">
             <label htmlFor="exampleInputEmail1" className="form-label">
               Email address
@@ -44,8 +46,8 @@ const Home = () => {
             Submit
           </button>
         </form>
-        <h2>All Notes</h2>
       </div>
+      <Notes />
     </div>
   );
 };
