@@ -1,4 +1,4 @@
-import {React,useEffect} from "react";
+import { React } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
@@ -22,14 +22,33 @@ const Navbar = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} aria-current="page" to="/">
+            <div className="navbar-nav me-auto">
+              <Link
+                className={`nav-link ${
+                  location.pathname === "/" ? "active" : ""
+                }`}
+                aria-current="page"
+                to="/"
+              >
                 Home
               </Link>
-              <Link className={`nav-link ${location.pathname === "/about" ? "active" : ""}`} to="/about">
+              <Link
+                className={`nav-link ${
+                  location.pathname === "/about" ? "active" : ""
+                }`}
+                to="/about"
+              >
                 About
               </Link>
             </div>
+            <form className="d-flex">
+              <Link className="btn btn-outline-primary me-2"  to = "/login"role="button">
+                Login
+              </Link>
+              <Link className="btn btn-outline-primary me-2" to = "/signup" role="button">
+                Signup
+              </Link>
+            </form>
           </div>
         </div>
       </nav>
