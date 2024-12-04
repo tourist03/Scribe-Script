@@ -129,6 +129,7 @@ const Notes = () => {
                 type="button"
                 className="btn btn-success"
                 onClick={handleClick}
+                disabled={note.etitle.length < 4 || note.edescription.length < 5}
               >
                 Update Note
               </button>
@@ -138,6 +139,9 @@ const Notes = () => {
       </div>
       <div className="row my-3">
         <h2>All Notes</h2>
+        <div className="container">
+          {notes.length === 0 && "Create your first note now"}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
