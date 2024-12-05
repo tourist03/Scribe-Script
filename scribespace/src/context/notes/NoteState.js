@@ -9,10 +9,10 @@ const NoteState = (props) => {
   //Get All Note
   const getNotes = async () => {
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
+    //console.log('Token:', token);
 
     if (!token) {
-      console.error('No token found');
+      //console.error('No token found');
       return;
     }
 
@@ -25,16 +25,16 @@ const NoteState = (props) => {
       });
 
       const json = await response.json();
-      console.log('Response:', json);
+      //console.log('Response:', json);
 
       if (Array.isArray(json)) {
         setNotes(json);
       } else {
         setNotes([]);
-        console.error('Received non-array data:', json);
+        //console.error('Received non-array data:', json);
       }
     } catch (error) {
-      console.error('Error fetching notes:', error);
+      //console.error('Error fetching notes:', error);
       setNotes([]);
     }
   };
@@ -58,10 +58,10 @@ const NoteState = (props) => {
         // Use spread operator to safely add the new note
         setNotes(prevNotes => [...prevNotes, note]);
       } else {
-        console.error('Failed to add note:', note);
+        //console.error('Failed to add note:', note);
       }
     } catch (error) {
-      console.error('Error adding note:', error);
+      //console.error('Error adding note:', error);
     }
   };
 
@@ -75,14 +75,16 @@ const NoteState = (props) => {
           localStorage.getItem('token'),
       },
     });
-    console.log("Note Deleting with ID :" + _id);
+    //console.log("Note Deleting with ID :" + _id);
     const newNote = notes.filter((note) => {
       return note._id !== _id;
     });
     const json = await response.json();
-    console.log(json);
+    //console.log(json);
+    // eslint-disable-next-line
     setNotes(newNote);
   };
+  // eslint-disable-next-line
 
   //Edit Note
   const editNote = async (id, title, description, tag) => {
@@ -98,7 +100,8 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag }),
     });
     const json = await response.json();
-    console.log(json);
+    // eslint-disable-next-line
+    //console.log(json);
 
     let newNote = JSON.parse(JSON.stringify(notes));
 

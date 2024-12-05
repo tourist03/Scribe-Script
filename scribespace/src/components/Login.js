@@ -22,7 +22,7 @@ const Login = (props) => {
       });
       
       const json = await response.json();
-      console.log('Login response:', json);
+      // console.log('Login response:', json);
 
       if (json.success) {
         // Save the token first
@@ -37,7 +37,7 @@ const Login = (props) => {
         props.showAlert("Invalid Credentials", "danger");
       }
     } catch (error) {
-      console.error('Login error:', error);
+      // console.error('Login error:', error);
       props.showAlert("Something went wrong", "danger");
     }
   };
@@ -46,7 +46,8 @@ const Login = (props) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
   return (
-    <div>
+    <div className = "container mt-3">
+      <h2>Login to continue to ScribeSpace</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">

@@ -31,13 +31,14 @@ const Notes = (props) => {
     } else {
       navigate("/login");
     }
+    // eslint-disable-next-line
   }, []);
 
   const ref = useRef(null);
   const refClose = useRef(null);
 
   const handleClick = (e) => {
-    console.log("Updating the note", note);
+    // console.log("Updating the note", note);
     editNote(note.id, note.etitle, note.edescription, note.etag);
     refClose.current.click();
     props.showAlert("note updated successfully", "warning");
