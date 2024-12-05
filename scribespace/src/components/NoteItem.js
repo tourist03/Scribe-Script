@@ -5,8 +5,13 @@ import noteContext from "../context/notes/noteContext";
 const NoteItem = (props) => {
   const context = useContext(noteContext);
   const { deleteNote } = context;
+  const { note, updateNote, showAlert } = props;
 
-  const { note, updateNote } = props;
+  const handleDelete = () => {
+    deleteNote(note._id);
+    showAlert("Note deleted successfully", "success");
+  };
+
   return (
     <div className="col-md-3">
       <div className="card my-3">
@@ -15,9 +20,7 @@ const NoteItem = (props) => {
             <i
               className="fa-duotone fa-regular fa-trash-can my-2 mx-3"
               style={{ color: "#594fa1" }}
-              onClick={() => {
-                deleteNote(note._id);props.showAlert("note deleted successfully" , "danger")
-              }}
+              onClick={handleDelete}
             ></i>
             <i
               className="fa-duotone fa-solid fa-user-pen mx-1"
