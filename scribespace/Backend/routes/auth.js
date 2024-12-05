@@ -18,10 +18,11 @@ router.post(
     body("password", "Password must be atlease 5 char").isLength({ min: 5 }),
   ],
   async (req, res) => {
+    let success = false;
     // if there are errors then return bad request
     const error = validationResult(req);
     if (!error.isEmpty()) {
-      return res.status(400).json({ error: error.array() });
+      return res.status(400).json({success ,  error: error.array() });
     }
 
     //if user already exist return error and bad request
@@ -32,7 +33,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "User with this email already exist" });
+          .json({ success , error: "User with this email already exist" });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -51,10 +52,11 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, JWT_SECRET);
-      res.json({ authToken });
+      success = true;
+      res.json({ success , authToken });
     } catch (error) {
       console.error(error.message);
-      res.status(500).send("Internal server Error Occured");
+      res.status(500).send(success , "Internal server Error Occured");
     }
   }
 );
