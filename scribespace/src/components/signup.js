@@ -14,11 +14,11 @@ const Signup = (props) => {
     const host = "http://localhost:5001";
     const { name, email, password, cpassword } = credentials;
     if (password !== cpassword) {
-      alert("Passwords do not match");
+      props.showAlert("Passwords do not match" , "danger");
       return;
     }
     if (password.length < 5) {
-      alert("Password must be at least 5 characters");
+      props.showAlert("Password must be at least 5 characters" , "danger");
       return;
     }
     const response = await fetch(`${host}/api/auth/createuser`, {

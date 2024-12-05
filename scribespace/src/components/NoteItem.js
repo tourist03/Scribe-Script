@@ -16,7 +16,7 @@ const NoteItem = (props) => {
               className="fa-duotone fa-regular fa-trash-can my-2 mx-3"
               style={{ color: "#594fa1" }}
               onClick={() => {
-                deleteNote(note._id);
+                deleteNote(note._id);props.showAlert("note deleted successfully" , "danger")
               }}
             ></i>
             <i
