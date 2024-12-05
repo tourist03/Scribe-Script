@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-    let navigate = useNavigate();
+const Login = (props) => {
+  let navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
   const handleSubmit = async (e) => {
@@ -21,14 +21,18 @@ const Login = () => {
     const json = await response.json();
     console.log(json);
 
-    if(json.success)
-    {
-        //save the authtoken and redirect
+    if (json.success) {
+      //save the authtoken and redirect
 
-        localStorage.setItem('token' , json.authtoken);
-        navigate("/");
+      localStorage.setItem("token", json.authtoken);
+      navigate("/");
+      // props.showAlert(
+      //   "Login in successfully, Create your first note now!!!! ",
+      //   "success"
+      // );
+    } else {
+      props.showAlert("Invalid Credentials", "danger");
     }
-    
   };
 
   const onChange = (e) => {
@@ -47,10 +51,9 @@ const Login = () => {
             id="email"
             name="email"
             value={credentials.email}
-            onChange = {onChange}
+            onChange={onChange}
           />
-          <div id="password" className="form-text">
-          </div>
+          <div id="password" className="form-text"></div>
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
@@ -62,7 +65,7 @@ const Login = () => {
             id="password"
             name="password"
             value={credentials.password}
-            onChange = {onChange}
+            onChange={onChange}
           />
         </div>
 
