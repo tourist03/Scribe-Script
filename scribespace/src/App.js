@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import SignUp from "./components/signup";
 import { useState } from "react";
 import PrivateRoute from "./components/PrivateRoute";
+import TemporaryNote from "./components/TemporaryNote";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -40,6 +41,7 @@ function App() {
             />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login showAlert={showAlert} />} />
+            <Route path="/tempNote" element={<TemporaryNote />} />
             <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
           </Routes>
         </div>

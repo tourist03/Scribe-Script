@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Login = (props) => {
   let navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +34,8 @@ const Login = (props) => {
         
         // Navigate after everything is done
         navigate("/");
+        console.log("Login successful");
+        setShowModal(false);
       } else {
         props.showAlert("Invalid Credentials", "danger");
       }

@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, PenLine, Lock, Users } from "lucide-react";
 import './About.css';
 
 const About = () => {
   const navigate = useNavigate();
-  const [tempNote, setTempNote] = useState({ title: "", description: "" });
-  const [showModal, setShowModal] = useState(false);
 
   const features = [
     {
@@ -36,48 +34,14 @@ const About = () => {
     navigate("/login");
   };
 
-  const handleTempNoteChange = (e) => {
-    setTempNote(e.target.value);
-  };
-
-  const handleSaveTempNote = () => {
-    // Logic to handle saving the temporary note (if needed)
-    console.log("Temporary Note:", tempNote); // For demonstration
-    navigate("/login"); // Redirect to login
+  const handleCreateTemporaryNote = () => {
+    navigate("/tempNote");
   };
 
   return (
     <div className="about-container">
       <h1 className="text-4xl font-bold mb-4">Scribescape</h1>
       <p className="text-lg mb-8">Your creative digital canvas for notes and drawings</p>
-      
-     
-
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Create a Temporary Note</h2>
-            <input
-              type="text"
-              placeholder="Title"
-              className="title-input"
-              value={tempNote.title}
-              onChange={(e) => setTempNote({ ...tempNote, title: e.target.value })}
-            />
-            <textarea
-              placeholder="Write your note here..."
-              className="description-textarea"
-              value={tempNote.description}
-              onChange={(e) => setTempNote({ ...tempNote, description: e.target.value })}
-            />
-            <p className="login-required">*Login required to save notes</p>
-            <div className="button-container">
-              <button onClick={handleSaveTempNote} className="save-button">Save</button>
-              <button onClick={() => setShowModal(false)} className="cancel-button">Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="features-grid">
         {features.map((feature) => (
@@ -91,12 +55,22 @@ const About = () => {
           </div>
         ))}
       </div>
-      <button onClick={() => setShowModal(true)} className="get-started" style={{ marginRight: '10px'  , backgroundColor : 'coral' , marginBlock : '10px'}}>
-        Create Temporary Note(No Login Required)
-      </button >
-      <button onClick={handleGetStarted} className="get-started" style={{ backgroundColor : 'blueviolet'}}>
-        Get Started(Login Required)
-      </button>
+      <div className="flex justify-center space-x-4 mt-4">
+        <button 
+          onClick={handleCreateTemporaryNote} 
+          className="get-started" 
+          style={{ backgroundColor: 'coral' }}
+        >
+          Create Temporary Note (No Login Required)
+        </button>
+        <button 
+          onClick={handleGetStarted} 
+          className="get-started" 
+          style={{ backgroundColor: 'blueviolet' }}
+        >
+          Get Started (Login Required)
+        </button>
+      </div>
     </div>
   );
 };
