@@ -59,7 +59,7 @@ const About = () => {
         <button 
           onClick={handleCreateTemporaryNote} 
           className="get-started" 
-          style={{ backgroundColor: 'coral' }}
+          style={{ backgroundColor: 'coral'  , marginLeft : '-130px' , marginRight : '20px'}}
         >
           Create Temporary Note (No Login Required)
         </button>
