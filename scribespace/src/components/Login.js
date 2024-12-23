@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './Login.css';
 
 const Login = (props) => {
   let navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const host = "http://localhost:5001";
     
     try {
@@ -23,66 +25,73 @@ const Login = (props) => {
       });
       
       const json = await response.json();
-      // console.log('Login response:', json);
-
       if (json.success) {
-        // Save the token first
         localStorage.setItem('token', json.authToken);
-        
-        // Show success message
         props.showAlert("Login successful!", "success");
-        
-        // Navigate after everything is done
         navigate("/");
-        console.log("Login successful");
-        setShowModal(false);
       } else {
         props.showAlert("Invalid Credentials", "danger");
       }
     } catch (error) {
-      // console.error('Login error:', error);
       props.showAlert("Something went wrong", "danger");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
+
   return (
-    <div className = "container mt-3">
-      <h2>Login to continue to ScribeSpace</h2>
+    <div className="login-container">
+      <h2>Welcome to ScribeSpace</h2>
+      <p>Login to continue to your account</p>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
+          <label htmlFor="email" className="form-label">Email address</label>
           <input
             type="email"
             className="form-control"
             id="email"
             name="email"
+            placeholder="Enter your email"
             value={credentials.email}
             onChange={onChange}
+            autoComplete="email"
           />
-          <div id="password" className="form-text"></div>
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
+          <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
             className="form-control"
             id="password"
             name="password"
+            placeholder="Enter your password"
             value={credentials.password}
             onChange={onChange}
+            autoComplete="current-password"
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          Submit
+        <button 
+          type="submit" 
+          className="btn btn-dark"
+          disabled={isLoading}
+        >
+          {isLoading ? "Logging in..." : "Login"}
         </button>
+        
+        <div className="mt-3">
+          <button 
+            type="button" 
+            className="btn btn-link" 
+            onClick={() => navigate("/signup")}
+          >
+            Don't have an account? Create one
+          </button>
+        </div>
       </form>
     </div>
   );
