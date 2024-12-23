@@ -1,0 +1,23 @@
+.signup-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.form-text {
+  color: #666;
+}
+
+.btn-dark {
+  background-color: #000;
+  color: #fff;
+} 

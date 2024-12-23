@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './Signup.css';
 
 const Signup = (props) => {
   let navigate = useNavigate();
@@ -9,18 +10,21 @@ const Signup = (props) => {
     password: "",
     cpassword: "",
   });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const host = "http://localhost:5001";
     const { name, email, password, cpassword } = credentials;
+
     if (password !== cpassword) {
-      props.showAlert("Passwords do not match" , "danger");
+      props.showAlert("Passwords do not match", "danger");
       return;
     }
     if (password.length < 5) {
-      props.showAlert("Password must be at least 5 characters" , "danger");
+      props.showAlert("Password must be at least 5 characters", "danger");
       return;
     }
+
     const response = await fetch(`${host}/api/auth/createuser`, {
       method: "POST",
       headers: {
@@ -32,31 +36,28 @@ const Signup = (props) => {
         password,
       }),
     });
+
     const json = await response.json();
-    // console.log(json);
     if (json.success) {
       //save the authtoken and redirect
-
       localStorage.setItem("token", json.authtoken);
       navigate("/");
-      props.showAlert("Account created successfully, Create your first note now!!!! " , "success")
-    }
-    else{
-      props.showAlert("Invalid Credentials" , "danger")
+      props.showAlert("Account created successfully, Create your first note now!!!!", "success");
+    } else {
+      props.showAlert("Invalid Credentials", "danger");
     }
   };
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
+
   return (
-    <div className="container mt-2">
+    <div className="signup-container">
       <h2>Create your account to use ScribeSpace</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
+          <label htmlFor="name" className="form-label">Name</label>
           <input
             type="text"
             className="form-control"
@@ -67,25 +68,21 @@ const Signup = (props) => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputEmail1" className="form-label">
-            Email address
-          </label>
+          <label htmlFor="email" className="form-label">Email address</label>
           <input
             type="email"
             className="form-control"
             id="email"
             name="email"
             onChange={onChange}
-            autoComplete="username" 
+            autoComplete="username"
           />
           <div id="email" className="form-text">
             We'll never share your email with anyone else.
           </div>
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
+          <label htmlFor="password" className="form-label">Password</label>
           <input
             type="password"
             className="form-control"
@@ -96,9 +93,7 @@ const Signup = (props) => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="cpassword" className="form-label">
-            Confirm Password
-          </label>
+          <label htmlFor="cpassword" className="form-label">Confirm Password</label>
           <input
             type="password"
             className="form-control"
@@ -109,9 +104,17 @@ const Signup = (props) => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
+        <button type="submit" className="btn btn-dark">Create Account</button>
+
+        <div className="mt-3">
+          <button 
+            type="button" 
+            className="btn btn-link" 
+            onClick={() => navigate("/login")}
+          >
+            Already have an account?
+          </button>
+        </div>
       </form>
     </div>
   );
