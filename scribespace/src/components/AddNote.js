@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import noteContext from "../context/notes/noteContext";
-import "./AddNote.css"; // Import the new CSS file
+import "./CSS/AddNote.css"; // Import the new CSS file
 
 const AddNote = ({ showAlert }) => {
   const context = useContext(noteContext);

@@ -15,21 +15,40 @@ const NoteItem = (props) => {
   return (
     <div className="note-item">
       <div className="card-body position-relative">
-        <div className="position-absolute top-0 end-0 mt-2 me-2">
+        <div
+          className="position-absolute"
+          style={{
+            top: '0',
+            right: '0',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            padding: '0.5rem',
+            width: '50px',
+          }}
+        >
           <i
-            className="fa-duotone fa-regular fa-trash-can my-2 mx-3"
-            style={{ color: "#594fa1" }}
+            className="fa-duotone fa-regular fa-trash-can mx-2"
+            style={{ color: "#594fa1", cursor: "pointer" }}
             onClick={handleDelete}
           ></i>
           <i
-            className="fa-duotone fa-solid fa-user-pen mx-1"
-            style={{ color: "#5021c0" }}
-            onClick={() => {
-              updateNote(note);
-            }}
+            className="fa-duotone fa-solid fa-user-pen mx-2"
+            style={{ color: "#5021c0", cursor: "pointer" }}
+            onClick={() => updateNote(note)}
           ></i>
         </div>
-        <h5 className="card-title">{note.title}</h5>
+        <h5
+          className="card-title"
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "calc(100% - 60px)", // Adjust spacing for icons
+          }}
+        >
+          {note.title}
+        </h5>
         <p className="card-text">{note.description}</p>
       </div>
     </div>

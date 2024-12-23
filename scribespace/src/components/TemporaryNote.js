@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, X } from 'lucide-react';
-import './TemporaryNote.css';
+import './CSS/TemporaryNote.css';
 
 const TemporaryNote = () => {
   const navigate = useNavigate();
