@@ -3,6 +3,7 @@ import noteContext from "../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 import { useNavigate } from "react-router-dom";
+import './Notes.css'; // Ensure this is imported
 
 const Notes = (props) => {
   let navigate = useNavigate();
@@ -25,6 +26,7 @@ const Notes = (props) => {
       etag: currentNote.tag,
     });
   };
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       getNotes();
@@ -38,17 +40,40 @@ const Notes = (props) => {
   const refClose = useRef(null);
 
   const handleClick = (e) => {
-    // console.log("Updating the note", note);
     editNote(note.id, note.etitle, note.edescription, note.etag);
     refClose.current.click();
     props.showAlert("note updated successfully", "warning");
   };
+
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
+
   return (
-    <>
-      <AddNote showAlert={props.showAlert} />
+    <div className="notes-container"> {/* Common container */}
+      <div className="add-note-section"> {/* Section for adding notes */}
+        <AddNote showAlert={props.showAlert} />
+      </div>
+
+      <div className="all-notes-section"> {/* Section for displaying all notes */}
+        <h2>All Notes</h2>
+        <div className="container"> {/* Flex container for notes */}
+          {(!notes || notes.length === 0) && "Create your first note now"}
+          <div className="notes-grid"> {/* New grid for notes */}
+            {Array.isArray(notes) && notes.map((note) => {
+              return (
+                <NoteItem
+                  key={note._id}
+                  updateNote={updateNote}
+                  showAlert={props.showAlert}
+                  note={note}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
       <button
         type="button"
         className="btn btn-primary d-none"
@@ -91,10 +116,8 @@ const Notes = (props) => {
                     id="etitle"
                     name="etitle"
                     value={note.etitle}
-                    aria-describedby="emailHelp"
                     onChange={onChange}
                   />
-                  <div id="emailHelp" className="form-text"></div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="description" className="form-label">
@@ -147,23 +170,7 @@ const Notes = (props) => {
           </div>
         </div>
       </div>
-      <div className="row my-3">
-        <h2>All Notes</h2>
-        <div className="container">
-          {(!notes || notes.length === 0) && "Create your first note now"}
-        </div>
-        {Array.isArray(notes) && notes.map((note) => {
-          return (
-            <NoteItem
-              key={note._id}
-              updateNote={updateNote}
-              showAlert={props.showAlert}
-              note={note}
-            />
-          );
-        })}
-      </div>
-    </>
+    </div>
   );
 };
 
