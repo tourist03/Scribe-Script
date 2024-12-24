@@ -1,93 +1,107 @@
-/* src/components/Notes.css */
-body {
-  font-family: 'Arial', sans-serif; /* Use a clean font */
-  background-color: #f4f4f4; /* Light background for contrast */
+/* Main container */
+.notes-flex-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  padding: 1rem;
+  gap: 2rem;
+  background-color: #f4f4f4;
 }
 
-.notes-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 20px;
-}
-
-.add-note-section,
-.all-notes-section {
+/* Add Note section */
+.add-note-section {
+  flex: 0 0 60%;  /* Takes 40% of the space, doesn't grow or shrink */
   background: white;
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem; /* Space between sections */
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 2rem);  /* Full height minus padding */
+  position: sticky;
+  top: 1rem;
+  overflow-y: auto;
 }
 
-h2 {
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
-  font-size: 2rem; /* Increased font size */
-  font-weight: 700; /* Bold font */
+/* All Notes section */
+.all-notes-section {
+  flex: 0 0 40%;  /* Takes 60% of the space, doesn't grow or shrink */
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 2rem);  /* Full height minus padding */
+  overflow-y: auto;
 }
 
-.container {
-  margin-top: 1rem;
-}
-
+/* Notes grid layout */
 .notes-grid {
-  display: flex; /* Use flexbox for layout */
-  flex-wrap: wrap; /* Allow wrapping to the next line */
-  gap: 1.5rem; /* Space between notes */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
 }
 
+/* Individual note styling */
 .note-item {
-  position: relative; /* Set position to relative for absolute positioning of buttons */
-  flex: 1 1 calc(30% - 1.5rem); /* Adjust width and spacing */
-  min-width: 250px; /* Minimum width for each note */
-  background: #ffffff; /* Background color for notes */
-  border-radius: 8px; /* Rounded corners */
-  padding: 1.5rem; /* Padding inside each note */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  transition: transform 0.2s; /* Smooth transition for hover effect */
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .note-item:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.note-item h5 {
-  margin: 0 0 0.5rem; /* Margin for title */
-  font-size: 1.2rem; /* Title font size */
-  color: #333; /* Darker color for title */
+/* Make it responsive */
+@media (max-width: 768px) {
+  .notes-flex-container {
+    flex-direction: column;  /* Stack vertically on mobile */
+  }
+
+  .add-note-section,
+  .all-notes-section {
+    flex: 1 1 auto;  /* Take full width on mobile */
+    height: auto;    /* Auto height on mobile */
+    position: static; /* Remove sticky positioning on mobile */
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;  /* Single column on mobile */
+  }
 }
 
-.note-item p {
-  margin: 0; /* Remove default margin */
-  color: #666; /* Lighter color for description */
+/* Base styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
 }
 
-.btn {
-  transition: background-color 0.2s; /* Smooth transition for button hover */
+/* Form input styling */
+input, textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
-.btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-  color: white; /* White text on hover */
+/* Add Note button styling */
+button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.note-actions {
-  position: absolute; /* Position buttons absolutely */
-  top: 10px; /* Distance from the top */
-  right: 10px; /* Distance from the right */
-  display: flex; /* Align buttons in a row */
-  gap: 0.5rem; /* Space between buttons */
-}
-
-.note-actions .btn {
-  padding: 0.5rem; /* Padding for buttons */
-  border: none; /* Remove default border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 1rem; /* Font size */
-  transition: background-color 0.2s; /* Smooth transition */
-}
-
-.note-actions .btn:hover {
-  opacity: 0.9; /* Slightly transparent on hover */
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }

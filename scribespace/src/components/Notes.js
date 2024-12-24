@@ -51,25 +51,27 @@ const Notes = (props) => {
 
   return (
     <div className="notes-container"> {/* Common container */}
-      <div className="add-note-section"> {/* Section for adding notes */}
-        <AddNote showAlert={props.showAlert} />
-      </div>
+      <div className="notes-flex-container"> {/* New flex container */}
+        <div className="add-note-section"> {/* Section for adding notes */}
+          <AddNote showAlert={props.showAlert} />
+        </div>
 
-      <div className="all-notes-section"> {/* Section for displaying all notes */}
-        <h2>All Notes</h2>
-        <div className="container"> {/* Flex container for notes */}
-          {(!notes || notes.length === 0) && "Create your first note now"}
-          <div className="notes-grid"> {/* New grid for notes */}
-            {Array.isArray(notes) && notes.map((note) => {
-              return (
-                <NoteItem
-                  key={note._id}
-                  updateNote={updateNote}
-                  showAlert={props.showAlert}
-                  note={note}
-                />
-              );
-            })}
+        <div className="all-notes-section"> {/* Section for displaying all notes */}
+          <h2>All Notes</h2>
+          <div className="container"> {/* Flex container for notes */}
+            {(!notes || notes.length === 0) && "Create your first note now"}
+            <div className="notes-grid"> {/* New grid for notes */}
+              {Array.isArray(notes) && notes.map((note) => {
+                return (
+                  <NoteItem
+                    key={note._id}
+                    updateNote={updateNote}
+                    showAlert={props.showAlert}
+                    note={note}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
