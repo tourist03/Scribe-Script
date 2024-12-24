@@ -1,70 +1,163 @@
-# Getting Started with Create React App
+# ScribeSpace API
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Notes](#notes)
+- [Models](#models)
+  - [User Model](#user-model)
+  - [Note Model](#note-model)
+- [Getting Started](#getting-started)
+- [License](#license)
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+ScribeSpace is a versatile cloud-based platform designed for seamless writing and drawing, enabling creativity and productivity anytime, anywhere. This API serves as the backend for the ScribeSpace application, allowing users to manage their notes securely.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **User Authentication**: Users can create accounts, log in, and manage their sessions securely using JSON Web Tokens (JWT).
+- **Note Management**: Users can create, read, update, and delete notes. Each note can have a title, description, and tags for better organization.
+- **Secure Storage**: All user data is securely stored in a MongoDB database, ensuring privacy and protection.
+- **User Accounts**: Each user can create an account to sync their notes across devices.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## API Endpoints
 
-### `npm test`
+### Authentication
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **POST** `/api/auth/createuser`
+  - Create a new user account.
+  - **Request Body**: 
+    ```json
+    {
+      "name": "User Name",
+      "email": "user@example.com",
+      "password": "password123"
+    }
+    ```
 
-### `npm run build`
+- **POST** `/api/auth/login`
+  - Authenticate a user and return a JWT token.
+  - **Request Body**: 
+    ```json
+    {
+      "email": "user@example.com",
+      "password": "password123"
+    }
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **POST** `/api/auth/getuser`
+  - Retrieve the logged-in user's details. (Requires authentication)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Notes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **GET** `/api/notes/fetchallnotes`
+  - Fetch all notes for the logged-in user. (Requires authentication)
 
-### `npm run eject`
+- **POST** `/api/notes/addnote`
+  - Add a new note for the logged-in user.
+  - **Request Body**: 
+    ```json
+    {
+      "title": "Note Title",
+      "description": "Note Description",
+      "tag": "General"
+    }
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **PUT** `/api/notes/updatenote/:id`
+  - Update an existing note by ID. (Requires authentication)
+  - **Request Body**: 
+    ```json
+    {
+      "title": "Updated Title",
+      "description": "Updated Description",
+      "tag": "Updated Tag"
+    }
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **DELETE** `/api/notes/deletenote/:id`
+  - Delete a note by ID. (Requires authentication)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Models
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### User Model
 
-## Learn More
+The User model defines the structure of user data in the database.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```javascript
+const UserSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Note Model
 
-### Code Splitting
+The Note model defines the structure of note data in the database.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```javascript
+const NotesSchema = new Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    tag: {
+        type: String,
+        default: "General"
+    }
+});
+```
 
-### Analyzing the Bundle Size
+## Getting Started
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
 
-### Making a Progressive Web App
+2. Navigate to the backend directory:
+   ```bash
+   cd Backend
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### Advanced Configuration
+4. Start the server:
+   ```bash
+   node index.js
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+5. The API will be running on `http://localhost:5001`.
 
-### Deployment
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License.
