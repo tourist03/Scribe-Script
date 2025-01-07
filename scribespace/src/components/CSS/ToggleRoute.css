@@ -1,0 +1,75 @@
+.toggle-route-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.button-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.toggle-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 200px;
+  height: 200px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.toggle-button i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.notes-button {
+  background-color: #4299e1;
+  color: white;
+}
+
+.draw-button {
+  background-color: #48bb78;
+  color: white;
+}
+
+.toggle-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 480px) {
+  .button-container {
+    flex-direction: column;
+  }
+  
+  .toggle-button {
+    width: 100%;
+    max-width: 300px;
+  }
+} 

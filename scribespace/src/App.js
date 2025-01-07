@@ -11,6 +11,7 @@ import { useState } from "react";
 import PrivateRoute from "./components/PrivateRoute";
 import TemporaryNote from "./components/TemporaryNote";
 import TemporaryCanvas from "./components/TemporaryCanvas";
+import ToggleRoute from "./components/toggleRoute";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -45,6 +46,7 @@ function App() {
             <Route path="/tempNote" element={<TemporaryNote />} />
             <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
             <Route path="/tempDraw" element={<TemporaryCanvas />} />
+            <Route path="/choose" element={<ToggleRoute />} />
           </Routes>
         </div>
       </Router>
