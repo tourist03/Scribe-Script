@@ -9,6 +9,7 @@ const TemporaryCanvas = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
   const isLoggedIn = !!localStorage.getItem('token');
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -62,31 +63,32 @@ const TemporaryCanvas = () => {
   const handleSave = async () => {
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
-
-    if (isLoggedIn) {
+    
+    if (localStorage.getItem('token')) {
       try {
-        const response = await fetch('http://localhost:5001/api/drawings/save', {
+        const response = await fetch('http://localhost:5001/api/drawings/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'auth-token': localStorage.getItem('token')
           },
-          body: JSON.stringify({ drawingData })
+          body: JSON.stringify({
+            drawingData,
+            title: `Drawing ${new Date().toLocaleDateString()}`
+          })
         });
 
         if (response.ok) {
-          navigate('/drawings'); // Navigate to drawings list page
+          navigate('/');
         } else {
-          alert('Failed to save drawing');
+          console.error('Failed to save drawing');
         }
       } catch (error) {
         console.error('Error saving drawing:', error);
-        alert('Error saving drawing');
       }
     } else {
-      // For non-logged-in users, maintain existing behavior
       localStorage.setItem('pendingTempDrawing', drawingData);
-      navigate("/login");
+      navigate('/login');
     }
   };
 
@@ -101,6 +103,13 @@ const TemporaryCanvas = () => {
   return (
     <div className="temporary-canvas-container">
       <h2>{isLoggedIn ? 'Create Drawing' : 'Create Temporary Drawing'}</h2>
+      <input
+        type="text"
+        placeholder="Drawing Title (optional)"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="drawing-title-input"
+      />
       <div className="canvas-wrapper">
         <canvas
           ref={canvasRef}

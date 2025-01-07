@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PenLine, FileText, FolderOpen } from 'lucide-react';
 import './CSS/ToggleRoute.css';
 
 const ToggleRoute = () => {
@@ -8,33 +9,35 @@ const ToggleRoute = () => {
 
   const handleNotes = () => {
     if (isLoggedIn) {
-      navigate("/notes"); // Go to notes page if logged in
+      navigate("/notes");
     } else {
-      navigate("/tempNote"); // Go to temporary note if not logged in
+      navigate("/tempNote");
     }
   };
 
   const handleDrawing = () => {
     if (isLoggedIn) {
-      navigate("/tempDraw"); // Go to drawing page if logged in
-      // After saving, it will go to /drawings instead of /login
+      navigate("/tempDraw");
     } else {
-      navigate("/tempDraw"); // Go to temporary drawing if not logged in
-      // Will redirect to login when trying to save
+      navigate("/tempDraw");
     }
+  };
+
+  const handleViewSaved = () => {
+    navigate("/saved-work");
   };
 
   return (
     <div className="toggle-route-container">
       <h2>Welcome to ScribeSpace</h2>
-      <p>{isLoggedIn ? 'Choose what you\'d like to create:' : 'Try it out:'}</p>
+      <p>{isLoggedIn ? 'Choose what you\'d like to do:' : 'Try it out:'}</p>
       
       <div className="button-container">
         <button 
           className="toggle-button notes-button" 
           onClick={handleNotes}
         >
-          <i className="fa-solid fa-note-sticky"></i>
+          <FileText size={24} />
           {isLoggedIn ? 'Create Notes' : 'Try Taking Notes'}
         </button>
 
@@ -42,9 +45,19 @@ const ToggleRoute = () => {
           className="toggle-button draw-button" 
           onClick={handleDrawing}
         >
-          <i className="fa-solid fa-pencil"></i>
+          <PenLine size={24} />
           {isLoggedIn ? 'Create Drawing' : 'Try Drawing'}
         </button>
+
+        {isLoggedIn && (
+          <button 
+            className="toggle-button view-saved-button" 
+            onClick={handleViewSaved}
+          >
+            <FolderOpen size={24} />
+            View Saved Work
+          </button>
+        )}
       </div>
 
       {!isLoggedIn && (

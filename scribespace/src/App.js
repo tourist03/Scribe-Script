@@ -13,6 +13,7 @@ import TemporaryNote from "./components/TemporaryNote";
 import TemporaryCanvas from "./components/TemporaryCanvas";
 import ToggleRoute from "./components/toggleRoute";
 import Drawings from "./components/Drawings";
+import SavedWork from "./components/SavedWork";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -53,6 +54,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Drawings showAlert={showAlert} />
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/saved-work" 
+              element={
+                <PrivateRoute>
+                  <SavedWork showAlert={showAlert} />
                 </PrivateRoute>
               } 
             />

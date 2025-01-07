@@ -43,7 +43,7 @@ const About = () => {
   };
 
   const handleAddNoteButtonClick = () => {
-    navigate("/");
+    navigate("/notes");
   };
 
   const handleCreateTemporaryDrawing = () => {
@@ -64,7 +64,7 @@ const About = () => {
         {features.map((feature) => (
           <div className="feature-card" key={feature.title}>
             {feature.comingSoon && (
-              <span className="coming-soon-badge">Coming Soon</span>
+              <span className="coming-soon-badge">ß version!</span>
             )}
             {feature.icon}
             <h3 className="text-xl font-semibold">{feature.title}</h3>
@@ -112,10 +112,20 @@ const About = () => {
             className="get-started"
             style={{
               backgroundColor: "coral",
-              marginLeft: "18px"
+              marginLeft: "18px",
             }}
           >
             Add New Note
+          </button>
+          <button
+            onClick={handleCreateTemporaryDrawing}
+            className="get-started"
+            style={{
+              backgroundColor: "coral",
+              marginLeft: "20px",
+            }}
+          >
+            Create Temporary Drawing
           </button>
         </div>
       )}

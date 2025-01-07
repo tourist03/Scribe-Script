@@ -54,4 +54,20 @@ canvas {
 .close-button:hover {
   background-color: #c82333;
   transform: scale(1.05);
+}
+
+.drawing-title-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.drawing-title-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 } 
