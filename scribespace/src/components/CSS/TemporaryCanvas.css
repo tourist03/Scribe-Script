@@ -1,0 +1,58 @@
+.temporary-canvas-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: transparent;
+  color: #333;
+}
+
+.canvas-wrapper {
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+  background: white;
+  touch-action: none;
+}
+
+.canvas-footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+.save-button, .close-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.close-button {
+  background-color: #dc3545;
+}
+
+.close-button:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+} 

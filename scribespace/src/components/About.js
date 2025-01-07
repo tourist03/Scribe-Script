@@ -46,6 +46,10 @@ const About = () => {
     navigate("/");
   };
 
+  const handleCreateTemporaryDrawing = () => {
+    navigate("/tempDraw");
+  };
+
   // Check if the user is logged in
   const isLoggedIn = !!localStorage.getItem("token");
 
@@ -77,11 +81,20 @@ const About = () => {
             className="get-started"
             style={{
               backgroundColor: "coral",
-              marginLeft: "-130px",
               marginRight: "20px",
             }}
           >
-            Create Temporary Note (No Login Required)
+            Create Temporary Note
+          </button>
+          <button
+            onClick={handleCreateTemporaryDrawing}
+            className="get-started"
+            style={{
+              backgroundColor: "coral",
+              marginRight: "20px",
+            }}
+          >
+            Create Temporary Drawing
           </button>
           <button
             onClick={handleGetStarted}
