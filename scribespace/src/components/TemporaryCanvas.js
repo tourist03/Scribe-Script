@@ -8,6 +8,7 @@ const TemporaryCanvas = () => {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
+  const isLoggedIn = !!localStorage.getItem('token');
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -58,20 +59,48 @@ const TemporaryCanvas = () => {
     };
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
-    localStorage.setItem('pendingTempDrawing', drawingData);
-    navigate("/login");
+
+    if (isLoggedIn) {
+      try {
+        const response = await fetch('http://localhost:5001/api/drawings/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'auth-token': localStorage.getItem('token')
+          },
+          body: JSON.stringify({ drawingData })
+        });
+
+        if (response.ok) {
+          navigate('/drawings'); // Navigate to drawings list page
+        } else {
+          alert('Failed to save drawing');
+        }
+      } catch (error) {
+        console.error('Error saving drawing:', error);
+        alert('Error saving drawing');
+      }
+    } else {
+      // For non-logged-in users, maintain existing behavior
+      localStorage.setItem('pendingTempDrawing', drawingData);
+      navigate("/login");
+    }
   };
 
   const handleClose = () => {
-    navigate("/about");
+    if (isLoggedIn) {
+      navigate("/choose"); // Return to choice page for logged-in users
+    } else {
+      navigate("/about"); // Return to about page for non-logged-in users
+    }
   };
 
   return (
     <div className="temporary-canvas-container">
-      <h2>Create Temporary Drawing</h2>
+      <h2>{isLoggedIn ? 'Create Drawing' : 'Create Temporary Drawing'}</h2>
       <div className="canvas-wrapper">
         <canvas
           ref={canvasRef}
@@ -86,7 +115,7 @@ const TemporaryCanvas = () => {
       </div>
       <div className="canvas-footer">
         <button onClick={handleSave} className="save-button">
-          <Save size={18} /> Save
+          <Save size={18} /> {isLoggedIn ? 'Save Drawing' : 'Save Temporary Drawing'}
         </button>
         <button onClick={handleClose} className="close-button">
           <X size={18} /> Close
