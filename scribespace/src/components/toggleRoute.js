@@ -61,22 +61,31 @@ const ToggleRoute = () => {
       </div>
 
       {!isLoggedIn && (
-        <div className="login-prompt">
-          <p>Want to save your work?</p>
-          <div className="auth-buttons">
-            <button 
-              className="auth-button login-button"
-              onClick={() => navigate('/login')}
-            >
-              Login
-            </button>
-            <button 
-              className="auth-button signup-button"
-              onClick={() => navigate('/signup')}
-            >
-              Sign Up
-            </button>
-          </div>
+        // <div className="login-prompt">
+        //   <p>Want to save your work?</p>
+        //   <div className="auth-buttons">
+        //     <button 
+        //       className="auth-button login-button"
+        //       onClick={() => navigate('/login')}
+        //     >
+        //       Login
+        //     </button>
+        //     <button 
+        //       className="auth-button signup-button"
+        //       onClick={() => navigate('/signup')}
+        //     >
+        //       Sign Up
+        //     </button>
+        //   </div>
+        // </div>
+        <div className="mt-3">
+          <button 
+            type="button" 
+            className="btn btn-link" 
+            onClick={() => navigate("/signup")}
+          >
+            Don't have an account? Create one
+          </button>
         </div>
       )}
     </div>
