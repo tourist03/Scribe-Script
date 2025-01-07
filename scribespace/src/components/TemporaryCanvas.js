@@ -1,25 +1,25 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Save, X } from 'lucide-react';
-import './CSS/TemporaryCanvas.css';
+import React, { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Save, X, Trash2 } from "lucide-react";
+import "./CSS/TemporaryCanvas.css";
 
 const TemporaryCanvas = () => {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
-  const isLoggedIn = !!localStorage.getItem('token');
-  const [title, setTitle] = useState('');
+  const isLoggedIn = !!localStorage.getItem("token");
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const canvas = canvasRef.current;
     canvas.width = window.innerWidth * 0.8;
     canvas.height = window.innerHeight * 0.6;
-    
-    const ctx = canvas.getContext('2d');
-    ctx.strokeStyle = '#000000';
+
+    const ctx = canvas.getContext("2d");
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
+    ctx.lineCap = "round";
     setContext(ctx);
   }, []);
 
@@ -47,48 +47,52 @@ const TemporaryCanvas = () => {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    
+
     if (e.touches) {
       return {
         offsetX: (e.touches[0].clientX - rect.left) * scaleX,
-        offsetY: (e.touches[0].clientY - rect.top) * scaleY
+        offsetY: (e.touches[0].clientY - rect.top) * scaleY,
       };
     }
     return {
       offsetX: (e.clientX - rect.left) * scaleX,
-      offsetY: (e.clientY - rect.top) * scaleY
+      offsetY: (e.clientY - rect.top) * scaleY,
     };
+  };
+
+  const clearCanvas = () => {
+    context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   };
 
   const handleSave = async () => {
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
-    
-    if (localStorage.getItem('token')) {
+
+    if (localStorage.getItem("token")) {
       try {
-        const response = await fetch('http://localhost:5001/api/drawings/add', {
-          method: 'POST',
+        const response = await fetch("http://localhost:5001/api/drawings/add", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'auth-token': localStorage.getItem('token')
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("token"),
           },
           body: JSON.stringify({
             drawingData,
-            title: `Drawing ${new Date().toLocaleDateString()}`
-          })
+            title: `Drawing ${new Date().toLocaleDateString()}`,
+          }),
         });
 
         if (response.ok) {
-          navigate('/');
+          navigate("/");
         } else {
-          console.error('Failed to save drawing');
+          console.error("Failed to save drawing");
         }
       } catch (error) {
-        console.error('Error saving drawing:', error);
+        console.error("Error saving drawing:", error);
       }
     } else {
-      localStorage.setItem('pendingTempDrawing', drawingData);
-      navigate('/login');
+      localStorage.setItem("pendingTempDrawing", drawingData);
+      navigate("/login");
     }
   };
 
@@ -102,7 +106,7 @@ const TemporaryCanvas = () => {
 
   return (
     <div className="temporary-canvas-container">
-      <h2>{isLoggedIn ? 'Create Drawing' : 'Create Temporary Drawing'}</h2>
+      <h2>{isLoggedIn ? "Create Drawing" : "Create Temporary Drawing"}</h2>
       <input
         type="text"
         placeholder="Drawing Title (optional)"
@@ -124,14 +128,18 @@ const TemporaryCanvas = () => {
       </div>
       <div className="canvas-footer">
         <button onClick={handleSave} className="save-button">
-          <Save size={18} /> {isLoggedIn ? 'Save Drawing' : 'Save Temporary Drawing'}
+          <Save size={18} />{" "}
+          {isLoggedIn ? "Save Drawing" : "Save Temporary Drawing"}
         </button>
         <button onClick={handleClose} className="close-button">
           <X size={18} /> Close
         </button>
+        <button onClick={clearCanvas} className="clear-button">
+          <Trash2 size={18} /> Clear
+        </button>   
       </div>
     </div>
   );
 };
 
-export default TemporaryCanvas; 
+export default TemporaryCanvas;
