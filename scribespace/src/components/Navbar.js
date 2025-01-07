@@ -36,7 +36,7 @@ const Navbar = () => {
             {localStorage.getItem('token') && (
               <>
                 <li className="nav-item">
-                  <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} to="/">
+                  <Link className={`nav-link ${location.pathname === "/choose" ? "active" : ""}`} to="/choose">
                     Home
                   </Link>
                 </li>

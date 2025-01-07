@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 10px;
   background: transparent;
   color: #333;
 }
@@ -27,7 +27,7 @@ canvas {
   justify-content: space-between;
   width: 100%;
   max-width: 800px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .save-button, .close-button {
@@ -40,7 +40,6 @@ canvas {
   transition: background-color 0.3s, transform 0.2s;
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
 .save-button:hover {

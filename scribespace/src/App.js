@@ -34,8 +34,9 @@ function App() {
         <Alert alert={alert} />
         <div className="container">
           <Routes>
+            <Route path="/" element={<ToggleRoute />} />
             <Route 
-              path="/" 
+              path="/notes" 
               element={
                 <PrivateRoute>
                   <Home showAlert={showAlert} />
@@ -44,10 +45,9 @@ function App() {
             />
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login showAlert={showAlert} />} />
-            <Route path="/tempNote" element={<TemporaryNote />} />
             <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
             <Route path="/tempDraw" element={<TemporaryCanvas />} />
-            <Route path="/choose" element={<ToggleRoute />} />
+            <Route path="/tempNote" element={<TemporaryNote />} />
             <Route 
               path="/drawings" 
               element={
