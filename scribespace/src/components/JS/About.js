@@ -5,130 +5,112 @@ import "../CSS/About.css";
 
 const About = () => {
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
 
   const features = [
     {
-      icon: <FileText className="w-6 h-6 text-purple-500" />,
+      icon: <FileText className="feature-icon text-blue-500" />,
       title: "Text Notes",
       description:
-        "Effortlessly create and organize your notes in the cloud with rich text formatting. Access your thoughts anytime, anywhere.",
+        "Create and organize your thoughts with rich text formatting. Access your notes anytime, anywhere with cloud storage.",
     },
     {
-      icon: <PenLine className="w-6 h-6 text-blue-500" />,
+      icon: <PenLine className="feature-icon text-purple-500" />,
       title: "Drawing Canvas",
       description:
-        "Unlock your creativity with our upcoming drawing feature. Create stunning artwork and save your drawings directly to the cloud.",
+        "Express your creativity with our digital canvas. Create, save, and share your artwork seamlessly.",
       comingSoon: true,
     },
     {
-      icon: <Lock className="w-6 h-6 text-green-500" />,
+      icon: <Lock className="feature-icon text-green-500" />,
       title: "Secure Storage",
       description:
-        "Rest assured that your notes and drawings are securely stored in the cloud, keeping your information private and protected.",
+        "Your data is protected with industry-standard security. Rest easy knowing your work is safe and private.",
     },
     {
-      icon: <Users className="w-6 h-6 text-orange-500" />,
+      icon: <Users className="feature-icon text-orange-500" />,
       title: "User Accounts",
       description:
-        "Create an account to sync your notes and drawings across devices, ensuring you can access your work from anywhere.",
+        "Personalized accounts for syncing your work across devices. Access your content from anywhere, anytime.",
     },
   ];
 
-  const handleGetStarted = () => {
-    navigate("/login");
-  };
-
-  const handleCreateTemporaryNote = () => {
-    navigate("/tempNote");
-  };
-
-  const handleAddNoteButtonClick = () => {
-    navigate("/notes");
-  };
-
-  const handleCreateTemporaryDrawing = () => {
-    navigate("/tempDraw");
-  };
-
-  // Check if the user is logged in
-  const isLoggedIn = !!localStorage.getItem("token");
+  const handleGetStarted = () => navigate("/login");
+  const handleCreateTemporaryNote = () => navigate("/tempNote");
+  const handleCreateTemporaryDrawing = () => navigate("/tempDraw");
+  const handleAddNoteButtonClick = () => navigate("/notes");
 
   return (
     <div className="about-container">
-      <h1 className="text-4xl font-bold mb-4">Scribescape</h1>
-      <p className="text-lg mb-8">
-        Your creative digital canvas for notes and drawings
-      </p>
-
-      <div className="features-grid">
-        {features.map((feature) => (
-          <div className="feature-card" key={feature.title}>
-            {feature.comingSoon && (
-              <span className="coming-soon-badge">ß version!</span>
-            )}
-            {feature.icon}
-            <h3 className="text-xl font-semibold">{feature.title}</h3>
-            <p>{feature.description}</p>
-          </div>
-        ))}
+      <div className="hero-section">
+        <h1 className="hero-title">Scribescape</h1>
+        <p className="hero-subtitle">
+          Your creative digital canvas for notes and drawings
+        </p>
       </div>
 
-      {/* Conditional rendering of buttons based on login status */}
-      {!isLoggedIn && (
-        <div className="flex justify-center space-x-4 mt-4">
-          <button
-            onClick={handleCreateTemporaryNote}
-            className="get-started"
-            style={{
-              backgroundColor: "coral",
-              marginRight: "20px",
-            }}
-          >
-            Create Temporary Note
-          </button>
-          <button
-            onClick={handleCreateTemporaryDrawing}
-            className="get-started"
-            style={{
-              backgroundColor: "coral",
-              marginRight: "20px",
-            }}
-          >
-            Create Temporary Drawing
-          </button>
-          <button
-            onClick={handleGetStarted}
-            className="get-started"
-            style={{ backgroundColor: "blueviolet" }}
-          >
-            Get Started (Login Required)
-          </button>
+      <div className="features-section">
+        <h2 className="features-title">Why Choose Scribescape?</h2>
+        <div className="features-grid">
+          {features.map((feature) => (
+            <div className="feature-card" key={feature.title}>
+              <div className="feature-icon-wrapper">{feature.icon}</div>
+              <div className="feature-content">
+                <h3 className="feature-title">
+                  {feature.title}
+                  {feature.comingSoon && (
+                    <span className="beta-badge">BETA</span>
+                  )}
+                </h3>
+                <p className="feature-description">{feature.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
-      {!!isLoggedIn && (
-        <div className="flex justify-center space-x-4 mt-4">
-          <button
-            onClick={handleAddNoteButtonClick}
-            className="get-started"
-            style={{
-              backgroundColor: "coral",
-              marginLeft: "18px",
-            }}
-          >
-            Add New Note
-          </button>
-          <button
-            onClick={handleCreateTemporaryDrawing}
-            className="get-started"
-            style={{
-              backgroundColor: "coral",
-              marginLeft: "20px",
-            }}
-          >
-            Create Temporary Drawing
-          </button>
-        </div>
-      )}
+      </div>
+
+      <div className="cta-section">
+        {!isLoggedIn ? (
+          <>
+            <div className="temp-actions">
+              <button
+                onClick={handleCreateTemporaryNote}
+                className="action-button note-button"
+              >
+                <FileText size={20} />
+                Create Temporary Note
+              </button>
+              <button
+                onClick={handleCreateTemporaryDrawing}
+                className="action-button draw-button"
+              >
+                <PenLine size={20} />
+                Create Temporary Drawing
+              </button>
+            </div>
+            <button onClick={handleGetStarted} className="get-started-button">
+              Get Started (Login Required)
+            </button>
+          </>
+        ) : (
+          <div className="logged-in-actions">
+            <button
+              onClick={handleAddNoteButtonClick}
+              className="action-button note-button"
+            >
+              <FileText size={20} />
+              Add New Note
+            </button>
+            <button
+              onClick={handleCreateTemporaryDrawing}
+              className="action-button draw-button"
+            >
+              <PenLine size={20} />
+              Create Drawing
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
