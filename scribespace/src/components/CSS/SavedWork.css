@@ -1,7 +1,7 @@
 .saved-work-container {
   padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   background: #f8fafc;
   min-height: 100vh;
 }
@@ -57,9 +57,9 @@
 
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 2rem;
-  padding: 1rem;
+  padding: 1rem 2rem;
 }
 
 .work-card {

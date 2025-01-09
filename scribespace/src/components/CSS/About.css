@@ -1,16 +1,32 @@
 .about-container {
   height: 100vh;
-  padding: 1rem 4rem;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
   background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: 100;
 }
 
 .hero-section {
   text-align: center;
-  padding: 1.5rem 0;
+  padding-top: 3rem;
 }
 
 .hero-title {
@@ -29,11 +45,9 @@
 }
 
 .features-section {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 1rem 0;
   flex: 1;
+  width: 100vw;
+  padding: 2rem 4rem;
   display: flex;
   flex-direction: column;
 }
@@ -50,7 +64,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
-  flex: 1;
+  height: 100%;
   align-items: stretch;
 }
 
@@ -58,12 +72,10 @@
   background: white;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-              0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto;
 }
 
 .feature-card:hover {
@@ -112,17 +124,19 @@
 }
 
 .cta-section {
-  width: 100%;
-  max-width: 1200px;
-  margin: 2rem auto 1rem;
-  text-align: center;
+  width: 100vw;
+  padding: 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .temp-actions, .logged-in-actions {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  width: 100%;
 }
 
 .action-button {
@@ -187,29 +201,16 @@
 
 @media (max-width: 768px) {
   .about-container {
+    position: relative;
     height: auto;
-    min-height: 100vh;
-    padding: 1rem;
+    overflow-y: auto;
   }
-
-  .hero-title {
-    font-size: 2.5rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.1rem;
-  }
-
+  
   .features-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .temp-actions, .logged-in-actions {
     flex-direction: column;
-  }
-
-  .action-button {
-    width: 100%;
-    justify-content: center;
   }
 }

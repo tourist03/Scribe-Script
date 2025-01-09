@@ -39,11 +39,14 @@ const About = () => {
   const handleCreateTemporaryNote = () => navigate("/tempNote");
   const handleCreateTemporaryDrawing = () => navigate("/tempDraw");
   const handleAddNoteButtonClick = () => navigate("/notes");
+  const handleTitleClick = () => navigate('/');
 
   return (
     <div className="about-container">
       <div className="hero-section">
-        <h1 className="hero-title">Scribescape</h1>
+        <h1 className="hero-title" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
+          Scribescape
+        </h1>
         <p className="hero-subtitle">
           Your creative digital canvas for notes and drawings
         </p>
