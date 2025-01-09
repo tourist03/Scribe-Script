@@ -4,6 +4,7 @@ import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 import { useNavigate } from "react-router-dom";
 import '../CSS/Notes.css'; // Ensure this is imported
+import { PenLine, FileText } from "lucide-react";
 
 const Notes = (props) => {
   let navigate = useNavigate();
@@ -50,28 +51,40 @@ const Notes = (props) => {
   };
 
   return (
-    <div className="notes-container"> {/* Common container */}
-      <div className="notes-flex-container"> {/* New flex container */}
-        <div className="add-note-section"> {/* Section for adding notes */}
+    <div className="notes-container">
+      <div className="notes-nav">
+        <div className="nav-title" onClick={() => navigate('/')}>ScribeSpace</div>
+        <div className="nav-actions">
+          <button className="nav-button secondary" onClick={() => navigate('/drawings')}>
+            <PenLine size={18} />
+            Drawings
+          </button>
+          <button className="nav-button secondary" onClick={() => navigate('/saved-work')}>
+            <FileText size={18} />
+            Saved Work
+          </button>
+        </div>
+      </div>
+
+      <div className="notes-flex-container">
+        <div className="add-note-section">
           <AddNote showAlert={props.showAlert} />
         </div>
 
-        <div className="all-notes-section"> {/* Section for displaying all notes */}
+        <div className="all-notes-section">
           <h2>All Notes</h2>
-          <div className="container"> {/* Flex container for notes */}
+          <div className="notes-grid">
             {(!notes || notes.length === 0) && "Create your first note now"}
-            <div className="notes-grid"> {/* New grid for notes */}
-              {Array.isArray(notes) && notes.map((note) => {
-                return (
-                  <NoteItem
-                    key={note._id}
-                    updateNote={updateNote}
-                    showAlert={props.showAlert}
-                    note={note}
-                  />
-                );
-              })}
-            </div>
+            {Array.isArray(notes) && notes.map((note) => {
+              return (
+                <NoteItem
+                  key={note._id}
+                  updateNote={updateNote}
+                  showAlert={props.showAlert}
+                  note={note}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

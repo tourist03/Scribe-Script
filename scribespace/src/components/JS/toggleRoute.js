@@ -1,93 +1,95 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PenLine, FileText, FolderOpen } from 'lucide-react';
+import { FileText, PenLine, FolderOpen, Info } from 'lucide-react';
 import '../CSS/ToggleRoute.css';
 
 const ToggleRoute = () => {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('token');
+  const [showAbout, setShowAbout] = useState(false);
 
-  const handleNotes = () => {
-    if (isLoggedIn) {
-      navigate("/notes");
-    } else {
-      navigate("/tempNote");
+  const features = [
+    {
+      icon: <FileText className="feature-icon" />,
+      title: "Smart Notes",
+      description: "Create and organize your thoughts with rich text formatting."
+    },
+    {
+      icon: <PenLine className="feature-icon" />,
+      title: "Drawing Canvas",
+      description: "Express your creativity with our digital canvas."
+    },
+    {
+      icon: <FolderOpen className="feature-icon" />,
+      title: "Cloud Storage",
+      description: "Access your work from anywhere, anytime."
     }
-  };
-
-  const handleDrawing = () => {
-    if (isLoggedIn) {
-      navigate("/tempDraw");
-    } else {
-      navigate("/tempDraw");
-    }
-  };
-
-  const handleViewSaved = () => {
-    navigate("/saved-work");
-  };
+  ];
 
   return (
     <div className="toggle-route-container">
-      <h2>Welcome to ScribeSpace</h2>
-      <p>{isLoggedIn ? 'Choose what you\'d like to do:' : 'Try it out:'}</p>
-      
-      <div className="button-container">
+      <div className="hero-section">
+        <h1 className="main-title">ScribeSpace</h1>
+        <p className="subtitle">Your creative digital canvas for notes and drawings</p>
+        
         <button 
-          className="toggle-button notes-button" 
-          onClick={handleNotes}
+          className="about-toggle"
+          onClick={() => setShowAbout(!showAbout)}
         >
-          <FileText size={24} />
-          {isLoggedIn ? 'Create Notes' : 'Try Taking Notes'}
+          <Info size={20} />
+          {showAbout ? 'Hide Details' : 'About ScribeSpace'}
         </button>
 
-        <button 
-          className="toggle-button draw-button" 
-          onClick={handleDrawing}
-        >
-          <PenLine size={24} />
-          {isLoggedIn ? 'Create Drawing' : 'Try Drawing'}
-        </button>
-
-        {isLoggedIn && (
-          <button 
-            className="toggle-button view-saved-button" 
-            onClick={handleViewSaved}
-          >
-            <FolderOpen size={24} />
-            View Saved Work
-          </button>
-        )}
+        <div className={`about-section ${showAbout ? 'show' : ''}`}>
+          <div className="features-grid">
+            {features.map((feature, index) => (
+              <div 
+                className="feature-card" 
+                key={index}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="feature-icon-wrapper">
+                  {feature.icon}
+                </div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {!isLoggedIn && (
-        // <div className="login-prompt">
-        //   <p>Want to save your work?</p>
-        //   <div className="auth-buttons">
-        //     <button 
-        //       className="auth-button login-button"
-        //       onClick={() => navigate('/login')}
-        //     >
-        //       Login
-        //     </button>
-        //     <button 
-        //       className="auth-button signup-button"
-        //       onClick={() => navigate('/signup')}
-        //     >
-        //       Sign Up
-        //     </button>
-        //   </div>
-        // </div>
-        <div className="mt-3">
+      <div className="action-section">
+        <h2>{isLoggedIn ? 'What would you like to do?' : 'Try it out:'}</h2>
+        
+        <div className="button-container">
           <button 
-            type="button" 
-            className="btn btn-link" 
-            onClick={() => navigate("/signup")}
+            className="action-button notes-button" 
+            onClick={() => navigate(isLoggedIn ? '/notes' : '/tempNote')}
           >
-            Don't have an account? Create one
+            <FileText size={24} />
+            {isLoggedIn ? 'Create Notes' : 'Try Taking Notes'}
           </button>
+
+          <button 
+            className="action-button draw-button" 
+            onClick={() => navigate('/tempDraw')}
+          >
+            <PenLine size={24} />
+            {isLoggedIn ? 'Create Drawing' : 'Try Drawing'}
+          </button>
+
+          {isLoggedIn && (
+            <button 
+              className="action-button view-button" 
+              onClick={() => navigate('/saved-work')}
+            >
+              <FolderOpen size={24} />
+              View Saved Work
+            </button>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

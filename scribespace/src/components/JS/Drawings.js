@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Download } from 'lucide-react';
+import { Trash2, Download, PenLine } from 'lucide-react';
 import '../CSS/Drawings.css';
 
 const Drawings = ({ showAlert }) => {
@@ -71,8 +71,17 @@ const Drawings = ({ showAlert }) => {
 
   return (
     <div className="drawings-container">
-      <h2>My Drawings</h2>
-      
+      <div className="drawings-header">
+        <h1 className="header-title">My Drawings</h1>
+        <button 
+          className="create-drawing-btn"
+          onClick={() => navigate('/tempDraw')}
+        >
+          <PenLine size={20} />
+          Create New Drawing
+        </button>
+      </div>
+
       {drawings.length === 0 ? (
         <div className="no-drawings">
           <p>No drawings yet. Start creating!</p>

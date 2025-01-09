@@ -1,6 +1,5 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/JS/Navbar";
 import Home from "./components/JS/Home";
 import About from "./components/JS/About";
 import NoteState from "./context/notes/NoteState";
@@ -14,6 +13,7 @@ import TemporaryCanvas from "./components/JS/TemporaryCanvas";
 import ToggleRoute from "./components/JS/toggleRoute";
 import Drawings from "./components/JS/Drawings";
 import SavedWork from "./components/JS/SavedWork";
+import TopNav from "./components/JS/TopNav";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -31,7 +31,7 @@ function App() {
   return (
     <NoteState>
       <Router>
-        <Navbar />
+        <TopNav />
         <Alert alert={alert} />
         <div className="container">
           <Routes>

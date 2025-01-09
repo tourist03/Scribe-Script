@@ -1,122 +1,169 @@
 .toggle-route-container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  padding: 2rem;
+  gap: 2rem;
+}
+
+.hero-section {
   text-align: center;
+  max-width: 1200px;
+  width: 100%;
 }
 
-h2 {
-  font-size: 2.5rem;
+.main-title {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
-  color: #333;
 }
 
-p {
-  font-size: 1.2rem;
-  color: #666;
+.subtitle {
+  font-size: 1.5rem;
+  color: #64748b;
   margin-bottom: 2rem;
+}
+
+.about-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: #4b5563;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 auto;
+}
+
+.about-toggle:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.about-section {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+  margin-top: 2rem;
+}
+
+.about-section.show {
+  max-height: 1000px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: slideUp 0.5s forwards;
+}
+
+.feature-icon-wrapper {
+  background: #f3f4f6;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.feature-icon {
+  color: #3b82f6;
+}
+
+.action-section {
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
 }
 
 .button-container {
   display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
 }
 
-.toggle-button {
+.action-button {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  width: 200px;
-  height: 200px;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
   border: none;
   border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
-}
-
-.toggle-button i {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  min-width: 200px;
 }
 
 .notes-button {
-  background-color: #4299e1;
-  color: white;
+  background: linear-gradient(45deg, #3182ce, #4299e1);
 }
 
 .draw-button {
-  background-color: #48bb78;
-  color: white;
+  background: linear-gradient(45deg, #6b46c1, #805ad5);
 }
 
-.toggle-button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+.view-button {
+  background: linear-gradient(45deg, #38a169, #48bb78);
 }
 
-@media (max-width: 480px) {
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 3rem;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
   .button-container {
     flex-direction: column;
   }
   
-  .toggle-button {
+  .action-button {
     width: 100%;
-    max-width: 300px;
   }
-} 
-
-.login-prompt {
-  margin-top: 3rem;
-  text-align: center;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.auth-button {
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.auth-button:hover {
-  transform: translateY(-2px);
-}
-
-.login-button {
-  background-color: #4299e1;
-  color: white;
-}
-
-.login-button:hover {
-  background-color: #3182ce;
-}
-
-.signup-button {
-  background-color: #48bb78;
-  color: white;
-}
-
-.signup-button:hover {
-  background-color: #38a169;
 } 
