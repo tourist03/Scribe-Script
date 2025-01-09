@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Save, X, Trash2, Image, Palette } from "lucide-react";
-import "./CSS/TemporaryCanvas.css";
+import "../CSS/TemporaryCanvas.css";
 
 const TemporaryCanvas = ({ showAlert }) => {
   const navigate = useNavigate();

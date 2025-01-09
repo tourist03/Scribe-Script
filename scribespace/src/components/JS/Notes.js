@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import noteContext from "../context/notes/noteContext";
+import noteContext from "../../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 import { useNavigate } from "react-router-dom";
-import './CSS/Notes.css'; // Ensure this is imported
+import '../CSS/Notes.css'; // Ensure this is imported
 
 const Notes = (props) => {
   let navigate = useNavigate();

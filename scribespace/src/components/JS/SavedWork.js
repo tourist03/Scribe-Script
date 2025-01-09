@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Download, FileText, PenLine, Plus } from 'lucide-react';
-import './CSS/SavedWork.css';
+import '../CSS/SavedWork.css';
 
 const SavedWork = ({ showAlert }) => {
   const [drawings, setDrawings] = useState([]);

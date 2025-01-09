@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PenLine, FileText, FolderOpen } from 'lucide-react';
-import './CSS/ToggleRoute.css';
+import '../CSS/ToggleRoute.css';
 
 const ToggleRoute = () => {
   const navigate = useNavigate();

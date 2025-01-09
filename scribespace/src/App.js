@@ -1,19 +1,19 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import About from "./components/About";
+import Navbar from "./components/JS/Navbar";
+import Home from "./components/JS/Home";
+import About from "./components/JS/About";
 import NoteState from "./context/notes/NoteState";
-import Alert from "./components/Alert";
-import Login from "./components/Login";
-import SignUp from "./components/signup";
+import Alert from "./components/JS/Alert";
+import Login from "./components/JS/Login";
+import SignUp from "./components/JS/signup";
 import { useState } from "react";
-import PrivateRoute from "./components/PrivateRoute";
-import TemporaryNote from "./components/TemporaryNote";
-import TemporaryCanvas from "./components/TemporaryCanvas";
-import ToggleRoute from "./components/toggleRoute";
-import Drawings from "./components/Drawings";
-import SavedWork from "./components/SavedWork";
+import PrivateRoute from "./components/JS/PrivateRoute";
+import TemporaryNote from "./components/JS/TemporaryNote";
+import TemporaryCanvas from "./components/JS/TemporaryCanvas";
+import ToggleRoute from "./components/JS/toggleRoute";
+import Drawings from "./components/JS/Drawings";
+import SavedWork from "./components/JS/SavedWork";
 
 function App() {
   const [alert, setAlert] = useState(null);

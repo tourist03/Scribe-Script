@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Download } from 'lucide-react';
-import './CSS/Drawings.css';
+import '../CSS/Drawings.css';
 
 const Drawings = ({ showAlert }) => {
   const [drawings, setDrawings] = useState([]);

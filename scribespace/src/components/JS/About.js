@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, PenLine, Lock, Users } from "lucide-react";
-import "./CSS/About.css";
+import "../CSS/About.css";
 
 const About = () => {
   const navigate = useNavigate();
