@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Download, FileText, PenLine, Plus } from 'lucide-react';
 import '../CSS/SavedWork.css';
+import '../CSS/common.css';
 
 const SavedWork = ({ showAlert }) => {
   const [drawings, setDrawings] = useState([]);
@@ -198,28 +199,32 @@ const SavedWork = ({ showAlert }) => {
   };
 
   return (
-    <div className="saved-work-container">
-      <h2>Your Saved Work</h2>
+    <div className="page-container">
+      <div className="page-header">
+        <h2 className="page-title">Your Saved Work</h2>
+      </div>
       
-      <div className="work-tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
-          onClick={() => setActiveTab('all')}
-        >
-          All Work
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'notes' ? 'active' : ''}`}
-          onClick={() => setActiveTab('notes')}
-        >
-          Notes
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'drawings' ? 'active' : ''}`}
-          onClick={() => setActiveTab('drawings')}
-        >
-          Drawings
-        </button>
+      <div className="tabs-container">
+        <div className="work-tabs">
+          <button 
+            className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveTab('all')}
+          >
+            All Work
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'notes' ? 'active' : ''}`}
+            onClick={() => setActiveTab('notes')}
+          >
+            Notes
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'drawings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('drawings')}
+          >
+            Drawings
+          </button>
+        </div>
       </div>
 
       {renderContent()}

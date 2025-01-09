@@ -1,0 +1,19 @@
+.page-container {
+  padding-top: 80px; /* Space for navbar */
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0 1.5rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  color: #1e293b;
+  margin: 0;
+} 

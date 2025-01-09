@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Save, X, Trash2, Image, Palette } from "lucide-react";
 import "../CSS/TemporaryCanvas.css";
+import "../CSS/common.css";
 
 const TemporaryCanvas = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -105,74 +106,65 @@ const TemporaryCanvas = ({ showAlert }) => {
 
   const handleClose = () => {
     if (isLoggedIn) {
-      navigate("/choose"); // Return to choice page for logged-in users
+      navigate("/"); // Return to choice page for logged-in users
     } else {
       navigate("/about"); // Return to about page for non-logged-in users
     }
   };
 
+  const handleTouchStart = (e) => {
+    e.preventDefault();
+    startDrawing(e.touches[0]);
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    draw(e.touches[0]);
+  };
+
   return (
-    <div className="temporary-canvas-container">
-      <div className="canvas-header">
-        <h2>{isLoggedIn ? "Create Drawing" : "Create Temporary Drawing"}</h2>
-        <p className="subtitle">Express your creativity freely</p>
+    <div className="page-container">
+      <div className="page-header">
+        <h2 className="page-title">
+          Create Drawing
+          {/* <span className="beta-badge">BETA</span> */}
+        </h2>
       </div>
 
-      <div className="canvas-controls">
+      <div className="canvas-content">
         <input
           type="text"
           placeholder="Give your masterpiece a name..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="drawing-title-input"
+          className="title-input"
         />
-        
-        {/* Future feature placeholders */}
-        <div className="tool-controls">
-          <button className="tool-btn" title="Coming soon: Color picker">
-            <Palette size={20} />
-          </button>
-          <button className="tool-btn" title="Coming soon: Brush size">
-            <span className="brush-icon">●</span>
-          </button>
-        </div>
-      </div>
 
-      <div className="canvas-wrapper">
-        <canvas
-          ref={canvasRef}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseOut={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        />
-      </div>
-
-      <div className="canvas-footer">
-        <div className="button-group">
-          <button onClick={handleSave} className="action-button save-button">
-            <Save size={20} />
-            <span>{isLoggedIn ? "Save Drawing" : "Save Temporary"}</span>
-          </button>
-          
-          <button onClick={clearCanvas} className="action-button clear-button">
-            <Trash2 size={20} />
-            <span>Clear Canvas</span>
-          </button>
+        <div className="canvas-wrapper">
+          <canvas
+            ref={canvasRef}
+            onMouseDown={startDrawing}
+            onMouseUp={stopDrawing}
+            onMouseMove={draw}
+            onMouseLeave={stopDrawing}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={stopDrawing}
+          />
         </div>
 
-        <div className="button-group">
-          <button onClick={SavedDrawing} className="action-button view-button">
-            <Image size={20} />
-            <span>View Gallery</span>
+        <div className="canvas-controls">
+          <button className="control-button save-button" onClick={handleSave}>
+            <Save size={20} /> Save Drawing
           </button>
-
-          <button onClick={handleClose} className="action-button close-button">
-            <X size={20} />
-            <span>Close</span>
+          <button className="control-button clear-button" onClick={clearCanvas}>
+            <Trash2 size={20} /> Clear Canvas
+          </button>
+          <button className="control-button view-button" onClick={SavedDrawing}>
+            <Image size={20} /> View Gallery
+          </button>
+          <button className="control-button close-button" onClick={handleClose}>
+            <X size={20} /> Close
           </button>
         </div>
       </div>

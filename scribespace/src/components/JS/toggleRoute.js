@@ -17,7 +17,8 @@ const ToggleRoute = () => {
     {
       icon: <PenLine className="feature-icon" />,
       title: "Drawing Canvas",
-      description: "Express your creativity with our digital canvas."
+      description: "Express your creativity with our digital canvas.",
+      isBeta: true
     },
     {
       icon: <FolderOpen className="feature-icon" />,
@@ -42,16 +43,15 @@ const ToggleRoute = () => {
 
         <div className={`about-section ${showAbout ? 'show' : ''}`}>
           <div className="features-grid">
-            {features.map((feature, index) => (
-              <div 
-                className="feature-card" 
-                key={index}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
+            {features.map((feature) => (
+              <div className="feature-card" key={feature.title}>
                 <div className="feature-icon-wrapper">
                   {feature.icon}
                 </div>
-                <h3>{feature.title}</h3>
+                <h3>
+                  {feature.title}
+                  {feature.isBeta && <span className="beta-badge">BETA</span>}
+                </h3>
                 <p>{feature.description}</p>
               </div>
             ))}

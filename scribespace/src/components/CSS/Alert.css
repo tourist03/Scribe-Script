@@ -1,0 +1,56 @@
+.alert-wrapper {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: auto;
+  min-width: 300px;
+  max-width: 90%;
+  pointer-events: none;
+}
+
+.alert {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alert-success {
+  background: #10B981;
+  color: white;
+}
+
+.alert-error {
+  background: #EF4444;
+  color: white;
+}
+
+.alert-warning {
+  background: #F59E0B;
+  color: white;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .alert-wrapper {
+    width: 90%;
+    min-width: unset;
+  }
+}
