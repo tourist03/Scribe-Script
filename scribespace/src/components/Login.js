@@ -12,13 +12,16 @@ const Login = (props) => {
     const pendingDrawing = localStorage.getItem('pendingTempDrawing');
     if (pendingDrawing) {
       try {
-        const response = await fetch('http://localhost:5001/api/drawings/save', {
+        const response = await fetch('http://localhost:5001/api/drawings/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'auth-token': token
           },
-          body: JSON.stringify({ drawingData: pendingDrawing })
+          body: JSON.stringify({ 
+            drawingData: pendingDrawing,
+            title: `Drawing ${new Date().toLocaleDateString()}`
+          })
         });
 
         if (response.ok) {

@@ -47,7 +47,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login showAlert={showAlert} />} />
             <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
-            <Route path="/tempDraw" element={<TemporaryCanvas />} />
+            <Route path="/tempDraw" element={<TemporaryCanvas showAlert={showAlert} />} />
             <Route path="/tempNote" element={<TemporaryNote />} />
             <Route 
               path="/drawings" 

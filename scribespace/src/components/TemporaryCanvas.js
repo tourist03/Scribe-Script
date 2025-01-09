@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Save, X, Trash2 } from "lucide-react";
+import { Save, X, Trash2, Image, Palette } from "lucide-react";
 import "./CSS/TemporaryCanvas.css";
 
-const TemporaryCanvas = () => {
+const TemporaryCanvas = ({ showAlert }) => {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -64,6 +64,10 @@ const TemporaryCanvas = () => {
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   };
 
+  const SavedDrawing = () => {
+    navigate("/drawings")
+  }
+
   const handleSave = async () => {
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
@@ -78,17 +82,20 @@ const TemporaryCanvas = () => {
           },
           body: JSON.stringify({
             drawingData,
-            title: `Drawing ${new Date().toLocaleDateString()}`,
+            title: title || `Drawing ${new Date().toLocaleDateString()}`,
           }),
         });
 
         if (response.ok) {
-          navigate("/");
+          showAlert("Drawing saved successfully!", "success");
+          navigate("/drawings");
         } else {
           console.error("Failed to save drawing");
+          showAlert("Failed to save drawing", "error");
         }
       } catch (error) {
         console.error("Error saving drawing:", error);
+        showAlert("Error saving drawing", "error");
       }
     } else {
       localStorage.setItem("pendingTempDrawing", drawingData);
@@ -106,14 +113,31 @@ const TemporaryCanvas = () => {
 
   return (
     <div className="temporary-canvas-container">
-      <h2>{isLoggedIn ? "Create Drawing" : "Create Temporary Drawing"}</h2>
-      <input
-        type="text"
-        placeholder="Drawing Title (optional)"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="drawing-title-input"
-      />
+      <div className="canvas-header">
+        <h2>{isLoggedIn ? "Create Drawing" : "Create Temporary Drawing"}</h2>
+        <p className="subtitle">Express your creativity freely</p>
+      </div>
+
+      <div className="canvas-controls">
+        <input
+          type="text"
+          placeholder="Give your masterpiece a name..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="drawing-title-input"
+        />
+        
+        {/* Future feature placeholders */}
+        <div className="tool-controls">
+          <button className="tool-btn" title="Coming soon: Color picker">
+            <Palette size={20} />
+          </button>
+          <button className="tool-btn" title="Coming soon: Brush size">
+            <span className="brush-icon">●</span>
+          </button>
+        </div>
+      </div>
+
       <div className="canvas-wrapper">
         <canvas
           ref={canvasRef}
@@ -126,17 +150,31 @@ const TemporaryCanvas = () => {
           onTouchEnd={stopDrawing}
         />
       </div>
+
       <div className="canvas-footer">
-        <button onClick={handleSave} className="save-button">
-          <Save size={18} />{" "}
-          {isLoggedIn ? "Save Drawing" : "Save Temporary Drawing"}
-        </button>
-        <button onClick={handleClose} className="close-button">
-          <X size={18} /> Close
-        </button>
-        <button onClick={clearCanvas} className="clear-button">
-          <Trash2 size={18} /> Clear
-        </button>   
+        <div className="button-group">
+          <button onClick={handleSave} className="action-button save-button">
+            <Save size={20} />
+            <span>{isLoggedIn ? "Save Drawing" : "Save Temporary"}</span>
+          </button>
+          
+          <button onClick={clearCanvas} className="action-button clear-button">
+            <Trash2 size={20} />
+            <span>Clear Canvas</span>
+          </button>
+        </div>
+
+        <div className="button-group">
+          <button onClick={SavedDrawing} className="action-button view-button">
+            <Image size={20} />
+            <span>View Gallery</span>
+          </button>
+
+          <button onClick={handleClose} className="action-button close-button">
+            <X size={20} />
+            <span>Close</span>
+          </button>
+        </div>
       </div>
     </div>
   );

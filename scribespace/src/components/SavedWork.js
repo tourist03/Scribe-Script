@@ -91,6 +91,19 @@ const SavedWork = ({ showAlert }) => {
     navigate(`/notes?edit=${noteId}`);
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'No date available';
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid date';
+
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   const renderContent = () => {
     if (loading) {
       return <div className="loading">Loading your work...</div>;
@@ -123,17 +136,31 @@ const SavedWork = ({ showAlert }) => {
             {item.drawingData ? (
               // Drawing card
               <>
-                <div className="work-type-badge drawing">
-                  <PenLine size={16} /> Drawing
-                </div>
-                <div className="work-preview">
-                  <img src={item.drawingData} alt={`Drawing ${index + 1}`} />
+                <div className="work-preview drawing-preview">
+                  <img 
+                    src={item.drawingData} 
+                    alt={`Drawing ${index + 1}`}
+                    style={{
+                      width: '100%',
+                      height: '200px',
+                      objectFit: 'contain',
+                      backgroundColor: '#fff'
+                    }}
+                  />
                 </div>
                 <div className="work-actions">
-                  <button onClick={() => handleDownload(item.drawingData, index)}>
+                  <button 
+                    onClick={() => handleDownload(item.drawingData, index)}
+                    className="action-btn"
+                    title="Download"
+                  >
                     <Download size={20} />
                   </button>
-                  <button onClick={() => handleDelete(item._id, 'drawing')}>
+                  <button 
+                    onClick={() => handleDelete(item._id, 'drawing')}
+                    className="action-btn delete"
+                    title="Delete"
+                  >
                     <Trash2 size={20} />
                   </button>
                 </div>
@@ -141,25 +168,28 @@ const SavedWork = ({ showAlert }) => {
             ) : (
               // Note card
               <>
-                <div className="work-type-badge note">
-                  <FileText size={16} /> Note
-                </div>
                 <div className="work-preview note-preview">
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
                 </div>
                 <div className="work-actions">
-                  <button onClick={() => handleEdit(item._id)}>
+                  <button 
+                    onClick={() => handleEdit(item._id)}
+                    className="action-btn"
+                  >
                     Edit
                   </button>
-                  <button onClick={() => handleDelete(item._id, 'note')}>
+                  <button 
+                    onClick={() => handleDelete(item._id, 'note')}
+                    className="action-btn delete"
+                  >
                     <Trash2 size={20} />
                   </button>
                 </div>
               </>
             )}
             <div className="work-date">
-              {new Date(item.date).toLocaleDateString()}
+              {formatDate(item.date)}
             </div>
           </div>
         ))}
