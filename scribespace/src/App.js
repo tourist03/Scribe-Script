@@ -14,6 +14,7 @@ import ToggleRoute from "./components/JS/toggleRoute";
 import Drawings from "./components/JS/Drawings";
 import SavedWork from "./components/JS/SavedWork";
 import TopNav from "./components/JS/TopNav";
+import DrawingCanvas from "./components/JS/DrawingCanvas";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -31,8 +32,8 @@ function App() {
   return (
     <NoteState>
       <Router>
-        <TopNav />
         <Alert alert={alert} />
+        <TopNav />
         <div className="container">
           <Routes>
             <Route path="/" element={<ToggleRoute />} />
@@ -48,7 +49,7 @@ function App() {
             <Route path="/login" element={<Login showAlert={showAlert} />} />
             <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
             <Route path="/tempDraw" element={<TemporaryCanvas showAlert={showAlert} />} />
-            <Route path="/tempNote" element={<TemporaryNote />} />
+            <Route path="/tempNote" element={<TemporaryNote showAlert={showAlert} />} />
             <Route 
               path="/drawings" 
               element={
@@ -62,6 +63,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <SavedWork showAlert={showAlert} />
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/drawing" 
+              element={
+                <PrivateRoute>
+                  <DrawingCanvas showAlert={showAlert} />
                 </PrivateRoute>
               } 
             />

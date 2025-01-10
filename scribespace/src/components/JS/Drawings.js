@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Download, Trash2, Plus } from 'lucide-react';
+import { Plus, Download, Trash2 } from 'lucide-react';
+import ConfirmationModal from './ConfirmationModal';
 import '../CSS/Drawings.css';
 
 const Drawings = ({ showAlert }) => {
+  const navigate = useNavigate();
   const [drawings, setDrawings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [drawingToDelete, setDrawingToDelete] = useState(null);
 
+  // Fetch drawings
   useEffect(() => {
     fetchDrawings();
   }, []);
@@ -15,44 +19,57 @@ const Drawings = ({ showAlert }) => {
   const fetchDrawings = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/drawings/fetch', {
-        method: 'GET',
         headers: {
-          'auth-token': localStorage.getItem('token')
-        }
+          'auth-token': localStorage.getItem('token'),
+        },
       });
-
       if (response.ok) {
         const data = await response.json();
         setDrawings(data);
-      } else {
-        showAlert('Failed to fetch drawings', 'error');
       }
     } catch (error) {
       console.error('Error fetching drawings:', error);
-      showAlert('Error loading drawings', 'error');
+      showAlert('Error fetching drawings', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this drawing?')) {
-      try {
-        const response = await fetch(`http://localhost:5001/api/drawings/delete/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'auth-token': localStorage.getItem('token')
-          }
-        });
+  const handleDelete = (id) => {
+    setDrawingToDelete(id);
+    setModalOpen(true);
+  };
 
-        if (response.ok) {
-          setDrawings(drawings.filter(drawing => drawing._id !== id));
-          showAlert('Drawing deleted successfully', 'success');
-        }
-      } catch (error) {
-        console.error('Error deleting drawing:', error);
-        showAlert('Failed to delete drawing', 'error');
+  const confirmDelete = async () => {
+    try {
+      console.log('Attempting to delete drawing:', drawingToDelete);
+      
+      const response = await fetch(`http://localhost:5001/api/drawings/delete/${drawingToDelete}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token'),
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update the local state to remove the deleted drawing
+        setDrawings(prevDrawings => 
+          prevDrawings.filter(drawing => drawing._id !== drawingToDelete)
+        );
+        showAlert('Drawing deleted successfully!', 'success');
+      } else {
+        console.error('Server response:', data);
+        showAlert(data.message || 'Failed to delete drawing', 'error');
       }
+    } catch (error) {
+      console.error('Error deleting drawing:', error);
+      showAlert('Error deleting drawing', 'error');
+    } finally {
+      setModalOpen(false);
+      setDrawingToDelete(null);
     }
   };
 
@@ -75,7 +92,7 @@ const Drawings = ({ showAlert }) => {
         <h2 className="drawings-title">My Drawings</h2>
         <button 
           className="create-drawing-btn"
-          onClick={() => navigate('/tempDraw')}
+          onClick={() => navigate('/drawing')}
         >
           <Plus size={20} />
           Create New Drawing
@@ -85,7 +102,7 @@ const Drawings = ({ showAlert }) => {
       {drawings.length === 0 ? (
         <div className="no-drawings">
           <p>No drawings yet. Start creating!</p>
-          <button onClick={() => navigate('/tempDraw')} className="create-drawing-btn">
+          <button onClick={() => navigate('/drawing')} className="create-drawing-btn">
             Create New Drawing
           </button>
         </div>
@@ -112,13 +129,19 @@ const Drawings = ({ showAlert }) => {
                   <Trash2 size={20} />
                 </button>
               </div>
-              <div className="drawing-date">
-                {new Date(drawing.date).toLocaleDateString()}
-              </div>
             </div>
           ))}
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setDrawingToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

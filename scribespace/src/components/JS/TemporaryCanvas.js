@@ -1,15 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Save, X, Trash2, Image, Palette } from "lucide-react";
+import { Save, X, FileText, ArrowLeft } from "lucide-react";
 import "../CSS/TemporaryCanvas.css";
-import "../CSS/common.css";
 
 const TemporaryCanvas = ({ showAlert }) => {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
-  const isLoggedIn = !!localStorage.getItem("token");
   const [title, setTitle] = useState("");
 
   useEffect(() => {
@@ -65,10 +63,6 @@ const TemporaryCanvas = ({ showAlert }) => {
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   };
 
-  const SavedDrawing = () => {
-    navigate("/drawings")
-  }
-
   const handleSave = async () => {
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
@@ -104,14 +98,6 @@ const TemporaryCanvas = ({ showAlert }) => {
     }
   };
 
-  const handleClose = () => {
-    if (isLoggedIn) {
-      navigate("/"); // Return to choice page for logged-in users
-    } else {
-      navigate("/about"); // Return to about page for non-logged-in users
-    }
-  };
-
   const handleTouchStart = (e) => {
     e.preventDefault();
     startDrawing(e.touches[0]);
@@ -123,49 +109,61 @@ const TemporaryCanvas = ({ showAlert }) => {
   };
 
   return (
-    <div className="page-container">
-      <div className="page-header">
-        <h2 className="page-title">
-          Create Drawing
-          {/* <span className="beta-badge">BETA</span> */}
-        </h2>
+    <div className="temp-draw-container">
+      <div className="temp-draw-header">
+        <button className="header-btn back-btn" onClick={() => navigate('/')}>
+          <ArrowLeft size={20} />
+          Back
+        </button>
+        <button className="header-btn switch-btn" onClick={() => navigate('/tempNote')}>
+          <FileText size={20} />
+          Switch to Notes
+        </button>
       </div>
 
-      <div className="canvas-content">
-        <input
-          type="text"
-          placeholder="Give your masterpiece a name..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="title-input"
-        />
+      <div className="temp-draw-content">
+        <h1 className="temp-draw-title">Create Quick Drawing</h1>
+        <p className="temp-draw-subtitle">Express yourself through art - no account needed</p>
 
-        <div className="canvas-wrapper">
-          <canvas
-            ref={canvasRef}
-            onMouseDown={startDrawing}
-            onMouseUp={stopDrawing}
-            onMouseMove={draw}
-            onMouseLeave={stopDrawing}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={stopDrawing}
-          />
+        <div className="drawing-form">
+          <div className="input-wrapper">
+            <input
+              type="text"
+              placeholder="Give your masterpiece a title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="title-input"
+            />
+          </div>
+
+          <div className="canvas-wrapper">
+            <canvas
+              ref={canvasRef}
+              onMouseDown={startDrawing}
+              onMouseUp={stopDrawing}
+              onMouseMove={draw}
+              onMouseLeave={stopDrawing}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={stopDrawing}
+            />
+          </div>
         </div>
 
-        <div className="canvas-controls">
-          <button className="control-button save-button" onClick={handleSave}>
-            <Save size={20} /> Save Drawing
+        <div className="action-buttons">
+          <button className="action-btn clear-btn" onClick={clearCanvas}>
+            Clear Canvas
           </button>
-          <button className="control-button clear-button" onClick={clearCanvas}>
-            <Trash2 size={20} /> Clear Canvas
-          </button>
-          <button className="control-button view-button" onClick={SavedDrawing}>
-            <Image size={20} /> View Gallery
-          </button>
-          <button className="control-button close-button" onClick={handleClose}>
-            <X size={20} /> Close
-          </button>
+          <div className="right-buttons">
+            <button className="action-btn save-btn" onClick={handleSave}>
+              <Save size={20} />
+              Save Drawing
+            </button>
+            <button className="action-btn close-btn" onClick={() => navigate('/')}>
+              <X size={20} />
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

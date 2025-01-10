@@ -1,66 +1,61 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, X } from 'lucide-react';
+import { Save, X, PenLine, ArrowLeft } from 'lucide-react';
 import '../CSS/TemporaryNote.css';
 
 const TemporaryNote = () => {
   const navigate = useNavigate();
-  const [tempNote, setTempNote] = useState({ title: "", description: "" });
-  const titleInputRef = useRef(null);
-
-  useEffect(() => {
-    titleInputRef.current.focus();
-  }, []);
-
-  const handleInputChange = (e, field) => {
-    const value = e.target.value;
-    setTempNote(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSaveTempNote = () => {
-    if (!tempNote.title.trim() && !tempNote.description.trim()) {
-      alert("Please enter a title or description");
-      return;
-    }
-    localStorage.setItem('pendingTempNote', JSON.stringify({ 
-      ...tempNote, 
-      createdAt: new Date().toISOString() 
-    }));
-    navigate("/login");
-  };
-
-  const handleClose = () => {
-    navigate("/about");
-  };
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
   return (
-    <div className="temporary-note-container">
-      <h2 style={{ marginBottom: '25px', marginTop: '-150px' }}>Create Temporary Note</h2>
-      <div className="input-group">
-        <input
-          ref={titleInputRef}
-          type="text"
-          placeholder="Title"
-          value={tempNote.title}
-          onChange={(e) => handleInputChange(e, 'title')}
-          className="input-field"
-        />
-      </div>
-      <div className="input-group">
-        <textarea 
-          placeholder="Description"
-          value={tempNote.description}
-          onChange={(e) => handleInputChange(e, 'description')}
-          className="textarea-field"
-        />
-      </div>
-      <div className="note-footer">
-        <button onClick={handleSaveTempNote} className="save-button">
-          <Save size={18} /> Save
+    <div className="temp-note-container">
+      <div className="temp-note-header">
+        <button className="header-btn back-btn" onClick={() => navigate('/')}>
+          <ArrowLeft size={20} />
+          Back
         </button>
-        <button onClick={handleClose} className="close-button">
-          <X size={18} /> Close
+        <button className="header-btn switch-btn" onClick={() => navigate('/tempDraw')}>
+          <PenLine size={20} />
+          Switch to Drawing
         </button>
+      </div>
+
+      <div className="temp-note-content">
+        <h1 className="temp-note-title">Create Quick Note</h1>
+        <p className="temp-note-subtitle">Capture your thoughts instantly - no account needed</p>
+
+        <div className="note-form">
+          <div className="input-wrapper">
+            <input
+              type="text"
+              placeholder="Give your note a title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="title-input"
+            />
+          </div>
+
+          <div className="input-wrapper">
+            <textarea
+              placeholder="Start writing your note here..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="description-input"
+            />
+          </div>
+        </div>
+
+        <div className="action-buttons">
+          <button className="action-btn save-btn" onClick={() => {}}>
+            <Save size={20} />
+            Save Note
+          </button>
+          <button className="action-btn close-btn" onClick={() => navigate('/')}>
+            <X size={20} />
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -122,7 +122,7 @@ const SavedWork = ({ showAlert }) => {
             <button onClick={() => navigate('/notes')} className="create-btn">
               <Plus size={20} /> Create Note
             </button>
-            <button onClick={() => navigate('/tempDraw')} className="create-btn">
+            <button onClick={() => navigate('/drawing')} className="create-btn">
               <Plus size={20} /> Create Drawing
             </button>
           </div>

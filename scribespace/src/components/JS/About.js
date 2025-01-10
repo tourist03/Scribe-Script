@@ -105,7 +105,7 @@ const About = () => {
               Add New Note
             </button>
             <button
-              onClick={handleCreateTemporaryDrawing}
+              onClick={() => navigate('/drawing')}
               className="action-button draw-button"
             >
               <PenLine size={20} />

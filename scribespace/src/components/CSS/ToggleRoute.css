@@ -10,22 +10,22 @@
 
 .hero-section {
   text-align: center;
-  max-width: 1200px;
-  width: 100%;
+  margin-bottom: 3rem;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .main-title {
-  font-size: 4rem;
-  font-weight: 800;
-  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  font-size: 3.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
 }
 
 .subtitle {
-  font-size: 1.5rem;
-  color: #64748b;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
 }
 
@@ -179,4 +179,33 @@
   border-radius: 4px;
   vertical-align: middle;
   text-transform: uppercase;
+}
+
+.login-prompt {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.login-link {
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: var(--transition);
+}
+
+.login-link:hover {
+  color: var(--primary-dark);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 } 

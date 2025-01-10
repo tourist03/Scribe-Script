@@ -57,6 +57,12 @@ const ToggleRoute = () => {
             ))}
           </div>
         </div>
+
+        {!isLoggedIn && (
+          <div className="login-prompt">
+            <p>Already have an account? <span className="login-link" onClick={() => navigate('/login')}>Login here</span></p>
+          </div>
+        )}
       </div>
 
       <div className="action-section">
