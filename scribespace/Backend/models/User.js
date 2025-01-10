@@ -14,6 +14,13 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google', 'github', 'microsoft'],
+    default: 'local'
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   date: {
     type: Date,
     default: Date.now,

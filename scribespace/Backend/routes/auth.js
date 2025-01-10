@@ -5,6 +5,9 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const fetchUser = require("../middleware/fetchUser");
+const passport = require('passport');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const JWT_SECRET = "$cr!be$p@ceJ%T$*cr&t";
 
@@ -120,5 +123,73 @@ router.post("/getuser", fetchUser, async (req, res) => {
     res.status(500).send("Internal server Error Occured");
   }
 });
+
+// Add these routes after your existing routes
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    // Create transporter for sending email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'your-email@gmail.com',
+        pass: 'your-app-specific-password'
+      }
+    });
+
+    // Send reset email
+    const mailOptions = {
+      to: user.email,
+      from: 'your-email@gmail.com',
+      subject: 'ScribeSpace Password Reset',
+      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+        Please click on the following link, or paste this into your browser to complete the process:\n\n
+        http://localhost:3000/reset-password/${resetToken}\n\n
+        If you did not request this, please ignore this email and your password will remain unchanged.\n`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'Reset email sent' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Server error" });
+  }
+});
+
+// Social Auth Routes
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+router.get('/github',
+  passport.authenticate('github', { scope: ['user:email'] })
+);
+
+router.get('/microsoft',
+  passport.authenticate('microsoft', { scope: ['user.read'] })
+);
+
+// Callback Routes
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    const token = jwt.sign({ user: { id: req.user.id } }, JWT_SECRET);
+    res.redirect(`http://localhost:3000/auth-callback?token=${token}`);
+  }
+);
+
+// Similar callback routes for GitHub and Microsoft...
 
 module.exports = router;

@@ -1,6 +1,9 @@
+require('dotenv').config();
 const connectToMongo = require("./db");
 const express = require("express");
 const cors = require("cors");
+const passport = require('./config/passport');
+const session = require('express-session');
 const drawingsRouter = require('./routes/drawings');
 
 connectToMongo();
@@ -13,11 +16,23 @@ const port = 5001;
 app.use(cors());
 app.use(express.json());
 
+// Add session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Initialize Passport and restore authentication state from session
+app.use(passport.initialize());
+app.use(passport.session());
+
 //Available Routes
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/notes", require("./routes/notes"));
 app.use("/api/drawings", drawingsRouter);
+app.use('/api/auth', require('./routes/socialAuth'));
 
 app.listen(port, () => {
   console.log(`ScribeSpace-Backend listening at http://localhost:${port}`);

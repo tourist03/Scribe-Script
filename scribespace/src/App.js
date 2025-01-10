@@ -15,6 +15,7 @@ import Drawings from "./components/JS/Drawings";
 import SavedWork from "./components/JS/SavedWork";
 import TopNav from "./components/JS/TopNav";
 import DrawingCanvas from "./components/JS/DrawingCanvas";
+import ResetPassword from './components/JS/ResetPassword';
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -74,6 +75,7 @@ function App() {
                 </PrivateRoute>
               } 
             />
+            <Route path="/reset-password/:token" element={<ResetPassword showAlert={showAlert} />} />
           </Routes>
         </div>
       </Router>

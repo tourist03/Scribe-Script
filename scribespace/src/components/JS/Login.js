@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import '../CSS//Login.css';
 
 const Login = (props) => {
@@ -153,6 +153,31 @@ const Login = (props) => {
           >
             Don't have an account? Create one
           </button>
+        </div>
+
+        <div className="social-login">
+          <button 
+            onClick={() => window.location.href='http://localhost:5001/api/auth/google'} 
+            className="social-button google"
+          >
+            Continue with Google
+          </button>
+          <button 
+            onClick={() => window.location.href='http://localhost:5001/api/auth/github'} 
+            className="social-button github"
+          >
+            Continue with GitHub
+          </button>
+          <button 
+            onClick={() => window.location.href='http://localhost:5001/api/auth/microsoft'} 
+            className="social-button microsoft"
+          >
+            Continue with Microsoft
+          </button>
+          
+          <div className="forgot-password">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </div>
         </div>
       </form>
     </div>

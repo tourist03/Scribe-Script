@@ -94,3 +94,55 @@
   .mt-3 {
     margin-top: 20px;
   }
+  
+  .social-login {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .social-button {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .social-button.google {
+    background: #fff;
+    color: #333;
+  }
+  
+  .social-button.github {
+    background: #24292e;
+    color: #fff;
+  }
+  
+  .social-button.microsoft {
+    background: #2f2f2f;
+    color: #fff;
+  }
+  
+  .forgot-password {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .forgot-password a {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
