@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
 import '../CSS/SavedWork.css';
 import { Download, Edit, Trash2 } from 'lucide-react';
+import { EMPTY_DRAWING_SVG, EMPTY_NOTES_SVG } from '../../constants/illustrations';
 
 const SavedWork = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -243,8 +244,20 @@ const SavedWork = ({ showAlert }) => {
             notes.map(note => renderNoteCard(note))
           ) : (
             <div className="empty-state">
-              <h3>No notes yet</h3>
-              <p>Create your first note to get started!</p>
+              <div className="empty-state-content">
+                <div 
+                  className="empty-state-image"
+                  dangerouslySetInnerHTML={{ __html: EMPTY_NOTES_SVG }}
+                />
+                <h2>No Notes Yet!</h2>
+                <p>Start writing your thoughts and ideas</p>
+                <button 
+                  className="create-note-btn"
+                  onClick={() => navigate('/notes')}
+                >
+                  + Create New Note
+                </button>
+              </div>
             </div>
           )
         ) : (
@@ -267,13 +280,6 @@ const SavedWork = ({ showAlert }) => {
                         <Download size={18} />
                       </button>
                       <button 
-                        onClick={() => navigate(`/draw/${drawing._id}`)} 
-                        className="action-btn edit-btn"
-                        title="Edit Drawing"
-                      >
-                        <Edit size={18} />
-                      </button>
-                      <button 
                         onClick={() => handleDelete(drawing._id, 'drawing')}
                         className="action-btn delete-btn"
                         title="Delete Drawing"
@@ -288,16 +294,15 @@ const SavedWork = ({ showAlert }) => {
           ) : (
             <div className="empty-state">
               <div className="empty-state-content">
-                <img 
-                  src="/drawing-illustration.svg" 
-                  alt="Create Drawing" 
-                  className="empty-state-image" 
+                <div 
+                  className="empty-state-image"
+                  dangerouslySetInnerHTML={{ __html: EMPTY_DRAWING_SVG }}
                 />
-                <h3>Start Creating!</h3>
+                <h2>No Drawings Yet!</h2>
                 <p>Express your creativity with your first drawing</p>
                 <button 
                   className="create-drawing-btn"
-                  onClick={() => navigate('/draw')}
+                  onClick={() => navigate('/tempDraw')}
                 >
                   + Create New Drawing
                 </button>

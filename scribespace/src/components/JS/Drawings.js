@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Download, Trash2 } from 'lucide-react';
+import { Plus, Download, Trash2, Sparkles, Info } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 import '../CSS/Drawings.css';
+import { EMPTY_DRAWING_SVG } from '../../constants/illustrations';
 
 const Drawings = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -89,13 +90,48 @@ const Drawings = ({ showAlert }) => {
   return (
     <div className="drawings-container">
       <div className="drawings-header">
-        <h1>My Drawings</h1>
-        <button 
-          className="create-drawing-btn"
-          onClick={() => navigate('/draw')}
-        >
-          + Create New Drawing
-        </button>
+        <div className="header-left">
+          <h1>My Drawings</h1>
+          <div className="beta-badge">
+            <Sparkles size={16} />
+            BETA
+          </div>
+        </div>
+        {drawings.length > 0 && (
+          <div className="create-drawing-wrapper">
+            <button 
+              className="create-drawing-btn"
+              onClick={() => navigate('/tempDraw')}
+            >
+              + Create New Drawing
+            </button>
+            <span className="beta-indicator">BETA</span>
+          </div>
+        )}
+      </div>
+
+      <div className="features-banner">
+        <div className="feature">
+          <Info size={20} />
+          <div className="feature-text">
+            <h3>Beta Features Available!</h3>
+            <p>Try our new drawing tools with enhanced features</p>
+            <ul className="feature-list">
+              <li>Free-form drawing</li>
+              <li>Multiple colors and brush sizes</li>
+              <li>Save and download your artwork</li>
+            </ul>
+          </div>
+        </div>
+        <div className="beta-features">
+          <div className="coming-soon">More features coming soon!</div>
+          <button 
+            className="feedback-btn"
+            onClick={() => window.open('your-feedback-form-url', '_blank')}
+          >
+            Give Feedback
+          </button>
+        </div>
       </div>
 
       {drawings.length > 0 ? (
@@ -127,16 +163,15 @@ const Drawings = ({ showAlert }) => {
       ) : (
         <div className="empty-state">
           <div className="empty-state-content">
-            <img 
-              src="/drawing-illustration.svg" 
-              alt="Create Drawing" 
-              className="empty-state-image" 
+            <div 
+              className="empty-state-image"
+              dangerouslySetInnerHTML={{ __html: EMPTY_DRAWING_SVG }}
             />
             <h2>Start Creating!</h2>
             <p>Express your creativity with your first drawing</p>
             <button 
               className="create-drawing-btn"
-              onClick={() => navigate('/draw')}
+              onClick={() => navigate('/tempDraw')}
             >
               + Create New Drawing
             </button>

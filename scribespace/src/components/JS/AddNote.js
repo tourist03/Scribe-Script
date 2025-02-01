@@ -21,9 +21,9 @@ const AddNote = ({ showAlert }) => {
 
   return (
     <div className="add-note-container">
-      <div className="note-form-container">
-        <h2 className="note-header">ScribeSpace - Add Note</h2>
-        <form className="note-form">
+      <div className="add-note-content">
+        <h1>ScribeSpace - Add Note</h1>
+        <div className="note-form">
           <div className="form-group">
             <label htmlFor="title" className="form-label">
               Title
@@ -81,7 +81,7 @@ const AddNote = ({ showAlert }) => {
           >
             Add Note
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -1,22 +1,23 @@
 /* src/components/AddNote.css */
 .add-note-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 20px;
-}
-
-.note-form-container {
-  background: white;
-  border-radius: 10px;
+  min-height: 100vh;
+  background: #f8fafc;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.note-header {
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
-  font-size: 1.8rem;
-  font-weight: 600;
+.add-note-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+}
+
+.add-note-content h1 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 2rem;
 }
 
 .note-form {
@@ -54,40 +55,42 @@
 
 textarea.form-input {
   resize: vertical;
-  min-height: 100px;
+  min-height: 150px;
 }
 
 .submit-button {
-  background-color: #4299e1;
+  background: linear-gradient(45deg, #6366f1, #8b5cf6);
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-top: 1rem;
 }
 
 .submit-button:hover:not(.button-disabled) {
-  background-color: #3182ce;
-}
-
-.submit-button:active:not(.button-disabled) {
-  transform: translateY(1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .button-disabled {
-  background-color: #cbd5e0;
+  background: #e2e8f0;
   cursor: not-allowed;
 }
 
-@media (max-width: 640px) {
-  .note-form-container {
+@media (max-width: 768px) {
+  .add-note-container {
+    padding: 1rem;
+  }
+
+  .add-note-content {
     padding: 1.5rem;
   }
-  
-  .note-header {
-    font-size: 1.5rem;
+
+  .add-note-content h1 {
+    font-size: 1.75rem;
   }
 }

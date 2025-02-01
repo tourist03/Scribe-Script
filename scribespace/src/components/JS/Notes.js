@@ -5,6 +5,7 @@ import AddNote from "./AddNote";
 import { useNavigate } from "react-router-dom";
 import '../CSS/Notes.css'; // Ensure this is imported
 import { PenLine, FileText } from "lucide-react";
+import { EMPTY_NOTES_SVG } from '../../constants/illustrations';
 
 const Notes = (props) => {
   let navigate = useNavigate();
@@ -88,24 +89,12 @@ const Notes = (props) => {
             ) : (
               <div className="empty-state">
                 <div className="empty-state-content">
-                  <img 
-                    src="/notes-illustration.svg" 
-                    alt="Create Note" 
-                    className="empty-state-image" 
+                  <div 
+                    className="empty-state-image"
+                    dangerouslySetInnerHTML={{ __html: EMPTY_NOTES_SVG }}
                   />
                   <h2>Start Writing!</h2>
                   <p>Create your first note to get started!</p>
-                  <button 
-                    className="create-note-btn"
-                    onClick={() => {
-                      document.querySelector('.add-note-section').scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                      });
-                    }}
-                  >
-                    + Create New Note
-                  </button>
                 </div>
               </div>
             )}

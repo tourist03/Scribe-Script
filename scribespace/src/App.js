@@ -16,6 +16,7 @@ import SavedWork from "./components/JS/SavedWork";
 import TopNav from "./components/JS/TopNav";
 import DrawingCanvas from "./components/JS/DrawingCanvas";
 import ResetPassword from './components/JS/ResetPassword';
+import BetaBanner from './components/JS/BetaBanner';
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -35,6 +36,7 @@ function App() {
       <Router>
         <Alert alert={alert} />
         <TopNav />
+        <BetaBanner />
         <div className="container">
           <Routes>
             <Route path="/" element={<ToggleRoute />} />

@@ -77,13 +77,16 @@ const ToggleRoute = () => {
             {isLoggedIn ? 'Create Notes' : 'Try Taking Notes'}
           </button>
 
-          <button 
-            className="action-button draw-button" 
-            onClick={() => navigate('/tempDraw')}
-          >
-            <PenLine size={24} />
-            {isLoggedIn ? 'Create Drawing' : 'Try Drawing'}
-          </button>
+          <div className="try-drawing-container">
+            <button 
+              className="try-button drawing"
+              onClick={() => navigate('/tempDraw')}
+            >
+              <PenLine size={20} />
+              Try Drawing
+              <span className="beta-tag">BETA</span>
+            </button>
+          </div>
 
           {isLoggedIn && (
             <button 
