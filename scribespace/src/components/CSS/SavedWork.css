@@ -40,142 +40,123 @@
 .content-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
   padding: 1rem 0;
 }
 
 .card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #edf2f7;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .note-card {
-  background: #ffffff;
-  border-radius: 12px;
+  background: white;
   padding: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.note-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .note-card h3 {
-  margin: 0 0 0.5rem 0;
-  color: #1e293b;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  color: #2d3748;
+  margin: 0 0 1rem 0;
 }
 
 .note-card p {
-  color: #4b5563;
+  color: #4a5568;
   margin-bottom: 1rem;
   line-height: 1.5;
 }
 
-.drawing-card {
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  position: relative;
+.note-card .actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.drawing-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.edit-btn {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: #bbdefb;
+  transform: translateY(-1px);
+}
+
+.drawing-card {
+  display: flex;
+  flex-direction: column;
 }
 
 .drawing-preview {
   width: 100%;
   height: 200px;
+  overflow: hidden;
   background: #f8fafc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #edf2f7;
 }
 
 .drawing-preview img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-
-.drawing-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  object-fit: contain;
   padding: 1rem;
 }
 
-.action-btn {
-  padding: 0.5rem;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.card-content {
+  padding: 1rem;
 }
 
-.action-btn:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.action-btn.delete:hover {
-  background: #fef2f2;
-  color: #dc2626;
+.drawing-title {
+  font-size: 1.1rem;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
 }
 
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #edf2f7;
+  margin-top: 0.5rem;
 }
 
 .date {
-  color: #888;
   font-size: 0.9rem;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.edit-btn, .delete-btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.edit-btn {
-  background-color: #2196f3;
-  color: white;
+  color: #718096;
 }
 
 .delete-btn {
-  background-color: #ff5252;
-  color: white;
-}
-
-.edit-btn:hover {
-  background-color: #1976d2;
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .delete-btn:hover {
-  background-color: #e53935;
+  background: #fecaca;
+  transform: translateY(-1px);
 }
 
 .empty-state {
@@ -220,4 +201,124 @@
 
 .note-card.editing {
   background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Add these styles to your SavedWork.css */
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.download-btn {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.download-btn:hover {
+  background: #dbeafe;
+}
+
+.edit-btn {
+  color: #0891b2;
+  background: #ecfeff;
+}
+
+.edit-btn:hover {
+  background: #cffafe;
+}
+
+.delete-btn {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+}
+
+/* Empty State Styles */
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  grid-column: 1 / -1;
+}
+
+.empty-state-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+.empty-state-image {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.create-drawing-btn {
+  background: linear-gradient(45deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+}
+
+.create-drawing-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -1px rgba(99, 102, 241, 0.3);
 }

@@ -74,17 +74,41 @@ const Notes = (props) => {
         <div className="all-notes-section">
           <h2>All Notes</h2>
           <div className="notes-grid">
-            {(!notes || notes.length === 0) && "Create your first note now"}
-            {Array.isArray(notes) && notes.map((note) => {
-              return (
-                <NoteItem
-                  key={note._id}
-                  updateNote={updateNote}
-                  showAlert={props.showAlert}
-                  note={note}
-                />
-              );
-            })}
+            {notes.length > 0 ? (
+              Array.isArray(notes) && notes.map((note) => {
+                return (
+                  <NoteItem
+                    key={note._id}
+                    updateNote={updateNote}
+                    showAlert={props.showAlert}
+                    note={note}
+                  />
+                );
+              })
+            ) : (
+              <div className="empty-state">
+                <div className="empty-state-content">
+                  <img 
+                    src="/notes-illustration.svg" 
+                    alt="Create Note" 
+                    className="empty-state-image" 
+                  />
+                  <h2>Start Writing!</h2>
+                  <p>Create your first note to get started!</p>
+                  <button 
+                    className="create-note-btn"
+                    onClick={() => {
+                      document.querySelector('.add-note-section').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                      });
+                    }}
+                  >
+                    + Create New Note
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

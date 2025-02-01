@@ -89,24 +89,16 @@ const Drawings = ({ showAlert }) => {
   return (
     <div className="drawings-container">
       <div className="drawings-header">
-        <h2 className="drawings-title">My Drawings</h2>
+        <h1>My Drawings</h1>
         <button 
           className="create-drawing-btn"
-          onClick={() => navigate('/drawing')}
+          onClick={() => navigate('/draw')}
         >
-          <Plus size={20} />
-          Create New Drawing
+          + Create New Drawing
         </button>
       </div>
 
-      {drawings.length === 0 ? (
-        <div className="no-drawings">
-          <p>No drawings yet. Start creating!</p>
-          <button onClick={() => navigate('/drawing')} className="create-drawing-btn">
-            Create New Drawing
-          </button>
-        </div>
-      ) : (
+      {drawings.length > 0 ? (
         <div className="drawings-grid">
           {drawings.map((drawing, index) => (
             <div key={drawing._id} className="drawing-card">
@@ -131,6 +123,24 @@ const Drawings = ({ showAlert }) => {
               </div>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="empty-state">
+          <div className="empty-state-content">
+            <img 
+              src="/drawing-illustration.svg" 
+              alt="Create Drawing" 
+              className="empty-state-image" 
+            />
+            <h2>Start Creating!</h2>
+            <p>Express your creativity with your first drawing</p>
+            <button 
+              className="create-drawing-btn"
+              onClick={() => navigate('/draw')}
+            >
+              + Create New Drawing
+            </button>
+          </div>
         </div>
       )}
 
