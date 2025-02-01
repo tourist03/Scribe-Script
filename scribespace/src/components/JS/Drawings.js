@@ -98,15 +98,12 @@ const Drawings = ({ showAlert }) => {
           </div>
         </div>
         {drawings.length > 0 && (
-          <div className="create-drawing-wrapper">
-            <button 
-              className="create-drawing-btn"
-              onClick={() => navigate('/tempDraw')}
-            >
-              + Create New Drawing
-            </button>
-            <span className="beta-indicator">BETA</span>
-          </div>
+          <button 
+            className="create-drawing-btn"
+            onClick={() => navigate('/tempDraw')}
+          >
+            + Create New Drawing
+          </button>
         )}
       </div>
 

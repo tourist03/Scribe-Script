@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Save, X, FileText, ArrowLeft, Sparkles } from "lucide-react";
+import { Save, X, FileText, ArrowLeft } from "lucide-react";
 import "../CSS/TemporaryCanvas.css";
 
 const TemporaryCanvas = ({ showAlert }) => {
@@ -9,8 +9,6 @@ const TemporaryCanvas = ({ showAlert }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState(null);
   const [title, setTitle] = useState("");
-  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
-  const [showTips, setShowTips] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,10 +64,6 @@ const TemporaryCanvas = ({ showAlert }) => {
   };
 
   const handleSave = async () => {
-    if (!title.trim()) {
-      setIsTitleModalOpen(true);
-      return;
-    }
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
 
@@ -115,123 +109,63 @@ const TemporaryCanvas = ({ showAlert }) => {
   };
 
   return (
-    <div className="drawing-workspace">
-      <div className="beta-corner-badge">
-        <Sparkles size={14} />
-        <span>BETA</span>
+    <div className="temp-draw-container">
+      <div className="temp-draw-header">
+        <button className="header-btn back-btn" onClick={() => navigate('/')}>
+          <ArrowLeft size={20} />
+          Back
+        </button>
+        <button className="header-btn switch-btn" onClick={() => navigate('/tempNote')}>
+          <FileText size={20} />
+          Switch to Notes
+        </button>
       </div>
 
-      {showTips && (
-        <div className="feature-tips">
-          <div className="tips-header">
-            <h3>Beta Features</h3>
-            <button onClick={() => setShowTips(false)}><X size={16} /></button>
-          </div>
-          <ul>
-            <li>💡 Use scroll to adjust brush size</li>
-            <li>🎨 Double-click color to open custom picker</li>
-            <li>↩️ Ctrl+Z for undo</li>
-            <li>💾 Title required to save your artwork</li>
-          </ul>
-          <div className="beta-notice">
-            Beta version - We're continuously improving!
-          </div>
-        </div>
-      )}
+      <div className="temp-draw-content">
+        <h1 className="temp-draw-title">Create Quick Drawing</h1>
+        <p className="temp-draw-subtitle">Express yourself through art - no account needed</p>
 
-      <div className="temp-draw-container">
-        <div className="temp-draw-header">
-          <button className="header-btn back-btn" onClick={() => navigate('/')}>
-            <ArrowLeft size={20} />
-            Back
-          </button>
-          <button className="header-btn switch-btn" onClick={() => navigate('/tempNote')}>
-            <FileText size={20} />
-            Switch to Notes
-          </button>
-        </div>
-
-        <div className="temp-draw-content">
-          <h1 className="temp-draw-title">Create Quick Drawing</h1>
-          <p className="temp-draw-subtitle">Express yourself through art - no account needed</p>
-
-          <div className="drawing-form">
-            <div className="input-wrapper">
-              <input
-                type="text"
-                placeholder="Give your masterpiece a title..."
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="title-input"
-              />
-            </div>
-
-            <div className="canvas-wrapper">
-              <canvas
-                ref={canvasRef}
-                onMouseDown={startDrawing}
-                onMouseUp={stopDrawing}
-                onMouseMove={draw}
-                onMouseLeave={stopDrawing}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={stopDrawing}
-              />
-            </div>
-          </div>
-
-          <div className="action-buttons">
-            <button className="action-btn clear-btn" onClick={clearCanvas}>
-              Clear Canvas
-            </button>
-            <div className="right-buttons">
-              <button 
-                className={`action-btn save-btn ${!title.trim() ? 'disabled' : ''}`}
-                onClick={handleSave}
-                disabled={!title.trim()}
-              >
-                <Save size={20} />
-                Save Drawing
-              </button>
-              <button className="action-btn close-btn" onClick={() => navigate('/')}>
-                <X size={20} />
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Title Required Modal */}
-      {isTitleModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Title Required</h3>
-            <p>Please give your artwork a title before saving.</p>
+        <div className="drawing-form">
+          <div className="input-wrapper">
             <input
               type="text"
-              placeholder="Enter title"
+              placeholder="Give your masterpiece a title..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              autoFocus
+              className="title-input"
             />
-            <div className="modal-actions">
-              <button onClick={() => setIsTitleModalOpen(false)}>Cancel</button>
-              <button 
-                onClick={async () => {
-                  if (title.trim()) {
-                    setIsTitleModalOpen(false);
-                    await handleSave();
-                  }
-                }}
-                disabled={!title.trim()}
-              >
-                Save
-              </button>
-            </div>
+          </div>
+
+          <div className="canvas-wrapper">
+            <canvas
+              ref={canvasRef}
+              onMouseDown={startDrawing}
+              onMouseUp={stopDrawing}
+              onMouseMove={draw}
+              onMouseLeave={stopDrawing}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={stopDrawing}
+            />
           </div>
         </div>
-      )}
+
+        <div className="action-buttons">
+          <button className="action-btn clear-btn" onClick={clearCanvas}>
+            Clear Canvas
+          </button>
+          <div className="right-buttons">
+            <button className="action-btn save-btn" onClick={handleSave}>
+              <Save size={20} />
+              Save Drawing
+            </button>
+            <button className="action-btn close-btn" onClick={() => navigate('/')}>
+              <X size={20} />
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
