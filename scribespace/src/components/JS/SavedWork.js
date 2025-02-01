@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ConfirmationModal from './ConfirmationModal';
 import '../CSS/SavedWork.css';
 
 const SavedWork = ({ showAlert }) => {
@@ -7,7 +8,9 @@ const SavedWork = ({ showAlert }) => {
   const [drawings, setDrawings] = useState([]);
   const [activeTab, setActiveTab] = useState('notes');
   const [editingNote, setEditingNote] = useState(null);
-  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [itemType, setItemType] = useState('');
 
   useEffect(() => {
     fetchNotes();
@@ -46,12 +49,18 @@ const SavedWork = ({ showAlert }) => {
     }
   };
 
-  const handleDelete = async (id, type) => {
-    try {
-      const endpoint = type === 'drawing' 
-        ? `http://localhost:5001/api/drawings/${id}`
-        : `http://localhost:5001/api/notes/deletenote/${id}`;
+  const handleDelete = (id, type) => {
+    setItemToDelete(id);
+    setItemType(type);
+    setIsModalOpen(true);
+  };
 
+  const confirmDelete = async () => {
+    const endpoint = itemType === 'drawing' 
+      ? `http://localhost:5001/api/drawings/delete/${itemToDelete}`
+      : `http://localhost:5001/api/notes/deletenote/${itemToDelete}`;
+
+    try {
       const response = await fetch(endpoint, {
         method: 'DELETE',
         headers: {
@@ -60,16 +69,18 @@ const SavedWork = ({ showAlert }) => {
       });
 
       if (response.ok) {
-        if (type === 'drawing') {
-          setDrawings(drawings.filter(drawing => drawing._id !== id));
+        if (itemType === 'drawing') {
+          setDrawings(drawings.filter(drawing => drawing._id !== itemToDelete));
         } else {
-          setNotes(notes.filter(note => note._id !== id));
+          setNotes(notes.filter(note => note._id !== itemToDelete));
         }
-        showAlert(`${type} deleted successfully`, 'success');
+        showAlert(`${itemType} deleted successfully`, 'success');
       }
     } catch (error) {
       console.error('Error deleting item:', error);
       showAlert('Error deleting item', 'error');
+    } finally {
+      setIsModalOpen(false);
     }
   };
 
@@ -214,6 +225,13 @@ const SavedWork = ({ showAlert }) => {
           )
         )}
       </div>
+      <ConfirmationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onConfirm={confirmDelete} 
+        title={itemType === 'drawing' ? 'Delete this Drawing' : 'Delete this Note'}
+        message={`Are you sure you want to delete this ${itemType}?`}
+      />
     </div>
   );
 };

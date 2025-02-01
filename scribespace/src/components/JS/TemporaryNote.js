@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './CSS/TemporaryNote.css';
+import '../CSS/TemporaryNote.css';
 
 const TemporaryNote = () => {
   const navigate = useNavigate();

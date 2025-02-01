@@ -47,7 +47,6 @@ router.post('/add', fetchUser, [
 // Route 3: Delete a drawing - DELETE "/api/drawings/delete/:id". Login required
 router.delete('/delete/:id', fetchUser, async (req, res) => {
   try {
-    // Find the drawing to be deleted
     let drawing = await Drawing.findById(req.params.id);
     if (!drawing) {
       return res.status(404).send('Drawing not found');
@@ -59,8 +58,7 @@ router.delete('/delete/:id', fetchUser, async (req, res) => {
     }
 
     drawing = await Drawing.findByIdAndDelete(req.params.id);
-    res.json({ success: 'Drawing has been deleted', drawing });
-
+    res.json({ success: 'Drawing deleted successfully' });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Internal Server Error');
