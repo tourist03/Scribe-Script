@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, X, PenLine, ArrowLeft } from 'lucide-react';
-import '../CSS/TemporaryNote.css';
+import './CSS/TemporaryNote.css';
 
 const TemporaryNote = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleSave = () => {
+    // Logic to save the note
+    // After saving, you can navigate or show a success message
+  };
 
   return (
     <div className="temp-note-container">
       <div className="temp-note-header">
         <button className="header-btn back-btn" onClick={() => navigate('/')}>
-          <ArrowLeft size={20} />
           Back
-        </button>
-        <button className="header-btn switch-btn" onClick={() => navigate('/tempDraw')}>
-          <PenLine size={20} />
-          Switch to Drawing
         </button>
       </div>
 
@@ -29,7 +29,7 @@ const TemporaryNote = () => {
           <div className="input-wrapper">
             <input
               type="text"
-              placeholder="Give your note a title..."
+              placeholder="Enter title (minimum 4 characters)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="title-input"
@@ -38,7 +38,7 @@ const TemporaryNote = () => {
 
           <div className="input-wrapper">
             <textarea
-              placeholder="Start writing your note here..."
+              placeholder="Enter description (minimum 5 characters)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="description-input"
@@ -47,15 +47,34 @@ const TemporaryNote = () => {
         </div>
 
         <div className="action-buttons">
-          <button className="action-btn save-btn" onClick={() => {}}>
-            <Save size={20} />
+          <button className="action-btn save-btn" onClick={handleSave}>
             Save Note
           </button>
           <button className="action-btn close-btn" onClick={() => navigate('/')}>
-            <X size={20} />
             Close
           </button>
         </div>
+
+        {isEditing && (
+          <div className="edit-note-container">
+            <h3>Edit Note</h3>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="edit-input title"
+            />
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="edit-input description"
+            />
+            <div className="edit-actions">
+              <button onClick={handleSave} className="save-btn">Save Changes</button>
+              <button onClick={() => setIsEditing(false)} className="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
