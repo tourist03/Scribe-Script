@@ -10,7 +10,7 @@ const SavedWork = ({ showAlert }) => {
   const [notes, setNotes] = useState([]);
   const [drawings, setDrawings] = useState([]);
   const [activeTab, setActiveTab] = useState('notes');
-  const [editingNote, setEditingNote] = useState(null);
+  const [editingNote,setEditingNote] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemType, setItemType] = useState('');
