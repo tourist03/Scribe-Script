@@ -34,51 +34,55 @@ function App() {
   return (
     <NoteState>
       <Router>
-        <Alert alert={alert} />
-        <TopNav />
-        <BetaBanner />
-        <div className="container">
-          <Routes>
-            <Route path="/" element={<ToggleRoute />} />
-            <Route 
-              path="/notes" 
-              element={
-                <PrivateRoute>
-                  <Home showAlert={showAlert} />
-                </PrivateRoute>
-              } 
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login showAlert={showAlert} />} />
-            <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
-            <Route path="/tempDraw" element={<TemporaryCanvas showAlert={showAlert} />} />
-            <Route path="/tempNote" element={<TemporaryNote showAlert={showAlert} />} />
-            <Route 
-              path="/drawings" 
-              element={
-                <PrivateRoute>
-                  <Drawings showAlert={showAlert} />
-                </PrivateRoute>
-              } 
-            />
-            <Route 
-              path="/saved-work" 
-              element={
-                <PrivateRoute>
-                  <SavedWork showAlert={showAlert} />
-                </PrivateRoute>
-              } 
-            />
-            <Route 
-              path="/drawing" 
-              element={
-                <PrivateRoute>
-                  <DrawingCanvas showAlert={showAlert} />
-                </PrivateRoute>
-              } 
-            />
-            <Route path="/reset-password/:token" element={<ResetPassword showAlert={showAlert} />} />
-          </Routes>
+        <div className="app-wrapper">
+          <TopNav />
+          <BetaBanner />
+          <div className="page-container">
+            <div className="container">
+              <Alert alert={alert} />
+              <Routes>
+                <Route path="/" element={<ToggleRoute />} />
+                <Route 
+                  path="/notes" 
+                  element={
+                    <PrivateRoute>
+                      <Home showAlert={showAlert} />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route path="/about" element={<About />} />
+                <Route path="/login" element={<Login showAlert={showAlert} />} />
+                <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
+                <Route path="/tempDraw" element={<TemporaryCanvas showAlert={showAlert} />} />
+                <Route path="/tempNote" element={<TemporaryNote showAlert={showAlert} />} />
+                <Route 
+                  path="/drawings" 
+                  element={
+                    <PrivateRoute>
+                      <Drawings showAlert={showAlert} />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/saved-work" 
+                  element={
+                    <PrivateRoute>
+                      <SavedWork showAlert={showAlert} />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route 
+                  path="/drawing" 
+                  element={
+                    <PrivateRoute>
+                      <DrawingCanvas showAlert={showAlert} />
+                    </PrivateRoute>
+                  } 
+                />
+                <Route path="/reset-password/:token" element={<ResetPassword showAlert={showAlert} />} />
+              </Routes>
+            </div>
+          </div>
         </div>
       </Router>
     </NoteState>

@@ -1,15 +1,95 @@
+/* Reset default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Base styles and resets */
+:root {
+  --max-width: 1280px;
+  --container-padding: 2rem;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* Dark theme colors */
+:root {
+  --bg-primary: #000000;
+  --bg-secondary: rgba(255, 255, 255, 0.05);
+  --gradient-primary: linear-gradient(to right, #7c3aed, #db2777);
+  --gradient-secondary: linear-gradient(145deg, rgba(124, 58, 237, 0.1), rgba(219, 39, 119, 0.1));
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --accent-purple: #a78bfa;
+  --accent-pink: #f472b6;
+}
+
+/* Layout containers */
 .page-container {
-  padding-top: 80px; /* Space for navbar */
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding-top: 64px;
+}
+
+.content-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 4rem var(--container-padding);
+}
+
+/* Common components */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-bg {
+  background: var(--gradient-primary);
+}
+
+/* Grid layouts */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .page-header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
 }
 
 .page-title {

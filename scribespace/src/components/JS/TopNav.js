@@ -1,47 +1,81 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FileText, PenLine, FolderOpen, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { FileText, Home, PenLine, LogOut, FolderOpen } from 'lucide-react';
 import '../CSS/TopNav.css';
 
 const TopNav = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const isLoggedIn = !!localStorage.getItem('token');
-  
-  // Add both tempNote and tempDraw to the list of routes where navbar should be hidden
-  const hideNavbarRoutes = ['/about', '/tempNote', '/tempDraw'];
-  
-  // Show navbar on /drawing route (logged-in drawing page)
-  if (hideNavbarRoutes.includes(location.pathname)) {
-    return null;
-  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/');
+    navigate('/login');
   };
 
   return (
-    <div className="nav-container">
-      <h1 className="app-logo" onClick={() => navigate('/')}>ScribeSpace</h1>
+    <nav className="top-nav">
+      <div className="nav-brand" onClick={() => navigate('/')}>
+        <FileText className="brand-icon" />
+        <h1>ScribeSpace</h1>
+      </div>
       
-      {isLoggedIn && (
-        <div className="nav-actions">
-          <button className="nav-icon-btn" onClick={() => navigate('/notes')} title="Notes">
-            <FileText size={20} />
-          </button>
-          <button className="nav-icon-btn" onClick={() => navigate('/drawings')} title="Drawings">
-            <PenLine size={20} />
-          </button>
-          <button className="nav-icon-btn" onClick={() => navigate('/saved-work')} title="Saved Work">
-            <FolderOpen size={20} />
-          </button>
-          <button className="nav-icon-btn logout" onClick={handleLogout} title="Logout">
-            <LogOut size={20} />
-          </button>
-        </div>
-      )}
-    </div>
+      <div className="nav-buttons">
+        {isLoggedIn ? (
+          <>
+            <button 
+              className="nav-button with-icon"
+              onClick={() => navigate('/')}
+            >
+              <Home size={18} />
+              Home
+            </button>
+            <button 
+              className="nav-button with-icon"
+              onClick={() => navigate('/notes')}
+            >
+              <FileText size={18} />
+              Notes
+            </button>
+            <button 
+              className="nav-button with-icon"
+              onClick={() => navigate('/drawings')}
+            >
+              <PenLine size={18} />
+              Drawings
+            </button>
+            <button 
+              className="nav-button with-icon"
+              onClick={() => navigate('/saved-work')}
+            >
+              <FolderOpen size={18} />
+              Saved Work
+            </button>
+            <button 
+              className="nav-button logout with-icon"
+              onClick={handleLogout}
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <button 
+              className="nav-button login"
+              onClick={() => navigate('/login')}
+            >
+              Login
+            </button>
+            <button 
+              className="nav-button signup"
+              onClick={() => navigate('/signup')}
+            >
+              Sign Up
+            </button>
+          </>
+        )}
+      </div>
+    </nav>
   );
 };
 
