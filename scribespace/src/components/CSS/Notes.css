@@ -1,85 +1,172 @@
 /* Main container */
 .notes-flex-container {
-  display: flex;
   width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-/* Add Note section - make it larger */
-.add-note-section {
-  flex: 2; /* Takes up 2/3 of the space */
-  background: white;
-  padding: 2.5rem;
-  height: 100vh;
-  overflow-y: auto;
-  border-right: 1px solid #e2e8f0;
-}
-
-/* All Notes section - make it smaller */
-.all-notes-section {
-  flex: 1; /* Takes up 1/3 of the space */
-  background: white;
-  padding: 2rem;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-/* Navigation bar at the top */
-.notes-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  background: var(--bg-primary);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
-.nav-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(45deg, #2563eb, #3b82f6);
+/* Add Note section */
+.add-note-section {
+  flex: 2;
+  background: var(--bg-secondary);
+  padding: 2.5rem;
+  height: calc(100vh - var(--header-height));
+  margin-top: var(--header-height);
+  overflow-y: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* All Notes section */
+.all-notes-section {
+  flex: 1;
+  background: var(--bg-secondary);
+  padding: 2rem;
+  height: calc(100vh - var(--header-height));
+  margin-top: var(--header-height);
+  overflow-y: auto;
+}
+
+.all-notes-section h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  cursor: pointer;
 }
 
-.nav-actions {
-  display: flex;
-  gap: 1rem;
+/* Note Form Styling */
+.note-form {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 8px;
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+  display: block;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  transition: var(--transition-all);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
+}
+
+textarea.form-input {
+  min-height: 150px;
+  resize: vertical;
+}
+
+/* Note Cards */
+.note-card {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition-all);
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+  background: var(--bg-secondary);
+  border-color: var(--accent-purple);
+}
+
+.note-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.note-description {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.note-actions {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
 }
 
-.nav-button.primary {
-  background: linear-gradient(45deg, #3182ce, #4299e1);
-  color: white;
+.action-button {
+  padding: var(--spacing-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-all);
 }
 
-.nav-button.secondary {
-  background: #f1f5f9;
-  color: #475569;
+.action-button:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.action-button.delete {
+  color: var(--accent-error);
+}
+
+.action-button.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--text-secondary);
+}
+
+.empty-state svg {
+  width: 120px;
+  height: 120px;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .notes-flex-container {
+    flex-direction: column;
+  }
+
+  .add-note-section,
+  .all-notes-section {
+    flex: none;
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
+  }
 }
 
 /* Notes grid layout */
@@ -92,57 +179,37 @@
 
 /* Individual note styling */
 .note-item {
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
 }
 
 .note-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Section titles */
 .section-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(45deg, #2563eb, #3b82f6);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
 }
 
 /* Add any additional styling for your editor, buttons, etc. */
 .editor-container {
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1rem;
   margin-top: 1rem;
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
   min-height: 400px;
-}
-
-.note-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.action-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .save-button {
@@ -154,22 +221,6 @@
   background: linear-gradient(45deg, #2c5282, #3182ce);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(66, 153, 225, 0.25);
-}
-
-@media (max-width: 1024px) {
-  .notes-flex-container {
-    flex-direction: column;
-    position: relative;
-    height: auto;
-    overflow: auto;
-  }
-
-  .add-note-section,
-  .all-notes-section {
-    width: 100%;
-    height: auto;
-    min-height: 100vh;
-  }
 }
 
 /* Base styles */
@@ -204,14 +255,6 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #0056b3;
-}
-
-.empty-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
-  width: 100%;
 }
 
 .empty-state-content {

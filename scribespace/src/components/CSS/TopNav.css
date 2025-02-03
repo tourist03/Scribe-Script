@@ -69,90 +69,102 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
-  background: rgba(255, 255, 255, 0.9);
+  height: var(--header-height);
+  background: rgba(19, 19, 26, 0.95);
   backdrop-filter: blur(8px);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
   z-index: 1000;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-}
-
-.nav-brand h1 {
+.nav-left h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2563eb;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  cursor: pointer;
+  margin: 0;
 }
 
-.brand-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #2563eb;
-}
-
-.nav-buttons {
+.nav-center {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
-.nav-button {
-  padding: 0.5rem 1.25rem;
+.nav-right {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #c4c4d4;
+  background: transparent;
   border: none;
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.nav-button.login {
-  color: #4b5563;
-  background: transparent;
+.nav-item:hover {
+  color: #ffffff;
+  background: rgba(139, 92, 246, 0.15);
 }
 
-.nav-button.login:hover {
-  color: #2563eb;
+.nav-item.active {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.2);
+  font-weight: 600;
 }
 
-.nav-button.signup {
+.nav-item svg {
+  color: #9494a6;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover svg {
+  color: #c4c4d4;
+}
+
+.nav-item.active svg {
+  color: #8b5cf6;
+}
+
+.nav-item.signup {
   color: white;
-  background: #2563eb;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  border-radius: 9999px;
+  font-weight: 600;
 }
 
-.nav-button.signup:hover {
-  background: #1d4ed8;
+.nav-item.signup:hover {
+  background: linear-gradient(135deg, #9333ea, #f472b6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
 }
 
-.nav-button.with-icon {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  color: #4b5563;
-  background: transparent;
+.nav-item.logout {
+  color: #ef4444;
 }
 
-.nav-button.with-icon:hover {
-  color: #2563eb;
-  background: rgba(37, 99, 235, 0.1);
+.nav-item.logout:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
 }
 
-.nav-button.logout {
-  color: #dc2626;
-}
-
-.nav-button.logout:hover {
-  color: #dc2626;
-  background: rgba(220, 38, 38, 0.1);
+.nav-item.logout svg {
+  color: #ef4444;
 }
 
 @media (max-width: 768px) {
@@ -160,16 +172,15 @@
     padding: 0 1rem;
   }
 
-  .nav-brand h1 {
+  .nav-left h1 {
     font-size: 1.25rem;
   }
 
-  .nav-button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
+  .nav-item span {
+    display: none;
   }
 
-  .nav-button.with-icon span {
-    display: none;
+  .nav-item {
+    padding: 0.5rem;
   }
 } 

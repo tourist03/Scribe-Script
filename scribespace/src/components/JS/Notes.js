@@ -52,53 +52,37 @@ const Notes = (props) => {
   };
 
   return (
-    <div className="notes-container">
-      <div className="notes-nav">
-        <div className="nav-title" onClick={() => navigate('/')}>ScribeSpace</div>
-        <div className="nav-actions">
-          <button className="nav-button secondary" onClick={() => navigate('/drawings')}>
-            <PenLine size={18} />
-            Drawings
-          </button>
-          <button className="nav-button secondary" onClick={() => navigate('/saved-work')}>
-            <FileText size={18} />
-            Saved Work
-          </button>
-        </div>
+    <div className="notes-flex-container">
+      <div className="add-note-section">
+        <AddNote showAlert={props.showAlert} />
       </div>
 
-      <div className="notes-flex-container">
-        <div className="add-note-section">
-          <AddNote showAlert={props.showAlert} />
-        </div>
-
-        <div className="all-notes-section">
-          <h2>All Notes</h2>
-          <div className="notes-grid">
-            {notes.length > 0 ? (
-              Array.isArray(notes) && notes.map((note) => {
-                return (
-                  <NoteItem
-                    key={note._id}
-                    updateNote={updateNote}
-                    showAlert={props.showAlert}
-                    note={note}
-                  />
-                );
-              })
-            ) : (
-              <div className="empty-state">
-                <div className="empty-state-content">
-                  <div 
-                    className="empty-state-image"
-                    dangerouslySetInnerHTML={{ __html: EMPTY_NOTES_SVG }}
-                  />
-                  <h2>Start Writing!</h2>
-                  <p>Create your first note to get started!</p>
-                </div>
+      <div className="all-notes-section">
+        <h2>All Notes</h2>
+        <div className="notes-grid">
+          {notes.length > 0 ? (
+            Array.isArray(notes) && notes.map((note) => {
+              return (
+                <NoteItem
+                  key={note._id}
+                  updateNote={updateNote}
+                  showAlert={props.showAlert}
+                  note={note}
+                />
+              );
+            })
+          ) : (
+            <div className="empty-state">
+              <div className="empty-state-content">
+                <div 
+                  className="empty-state-image"
+                  dangerouslySetInnerHTML={{ __html: EMPTY_NOTES_SVG }}
+                />
+                <h2>Start Writing!</h2>
+                <p>Create your first note to get started!</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
