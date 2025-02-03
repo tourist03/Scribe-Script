@@ -1,9 +1,11 @@
 .drawings-container {
-  width: 100%;
   min-height: 100vh;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  padding-top: 64px;
+  background: linear-gradient(145deg, 
+    rgba(20, 10, 30, 0.95),
+    rgba(60, 20, 50, 0.95)
+  );
+  padding: var(--spacing-xl);
+  padding-top: calc(var(--header-height) + 2rem);
 }
 
 .drawings-content {
@@ -317,4 +319,56 @@
 .feedback-btn:hover {
   background: #4f46e5;
   transform: translateY(-1px);
+}
+
+/* Canvas container styling */
+.canvas-container {
+  background: rgba(35, 20, 45, 0.4);  /* Dark purple background */
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(236, 72, 153, 0.1);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  padding: 1rem;
+}
+
+/* Canvas element itself */
+canvas {
+  background: rgba(20, 10, 30, 0.95);  /* Darker background for contrast */
+  border-radius: var(--radius-md);
+  cursor: crosshair;
+}
+
+/* Drawing tools container */
+.drawing-tools {
+  background: rgba(35, 20, 45, 0.6);
+  border: 1px solid rgba(236, 72, 153, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Tool buttons */
+.tool-button {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.1);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.tool-button:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(236, 72, 153, 0.2);
+}
+
+.tool-button.active {
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.2),
+    rgba(236, 72, 153, 0.2)
+  );
+  border-color: rgba(236, 72, 153, 0.3);
 } 
