@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, X, ArrowLeft, FileText } from 'lucide-react';
+import { Save, X, ArrowLeft, FileText, Palette, Trash2, Download } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 
 const TemporaryCanvas = ({ showAlert }) => {
@@ -17,6 +17,27 @@ const TemporaryCanvas = ({ showAlert }) => {
     showAuthButtons: false
   });
   const isLoggedIn = !!localStorage.getItem('token');
+  const [strokeSize, setStrokeSize] = useState(2);
+  const [strokeColor, setStrokeColor] = useState('#ffffff');
+  const [showToolbar, setShowToolbar] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  const colors = [
+    { name: 'White', value: '#ffffff' },
+    { name: 'Red', value: '#ef4444' },
+    { name: 'Green', value: '#22c55e' },
+    { name: 'Blue', value: '#3b82f6' },
+    { name: 'Yellow', value: '#eab308' },
+    { name: 'Purple', value: '#8b5cf6' },
+    { name: 'Pink', value: '#ec4899' }
+  ];
+
+  const strokeSizes = [
+    { name: 'Fine', value: 1 },
+    { name: 'Medium', value: 2 },
+    { name: 'Thick', value: 4 },
+    { name: 'Extra Thick', value: 6 }
+  ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -38,6 +59,13 @@ const TemporaryCanvas = ({ showAlert }) => {
     context.fillStyle = 'rgba(17, 24, 39, 0.95)';
     context.fillRect(0, 0, canvas.width, canvas.height);
   }, []);
+
+  useEffect(() => {
+    if (contextRef.current) {
+      contextRef.current.strokeStyle = strokeColor;
+      contextRef.current.lineWidth = strokeSize;
+    }
+  }, [strokeColor, strokeSize]);
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
@@ -96,9 +124,11 @@ const TemporaryCanvas = ({ showAlert }) => {
       return;
     }
 
+    const token = localStorage.getItem('token');
+    const isLoggedIn = !!token;
+
     if (!isLoggedIn) {
-      // Store drawing data temporarily
-      const drawingData = canvasRef.current.toDataURL();
+      const drawingData = canvasRef.current.toDataURL('image/jpeg', 0.5);
       localStorage.setItem('pendingTempDrawing', drawingData);
       
       setModalConfig({
@@ -115,29 +145,44 @@ const TemporaryCanvas = ({ showAlert }) => {
     }
 
     try {
-      const drawingData = canvasRef.current.toDataURL();
-      const response = await fetch("http://localhost:5001/api/drawings/add", {
-        method: "POST",
+      const drawingData = canvasRef.current.toDataURL('image/jpeg', 0.5);
+      
+      const maxChunkSize = 5 * 1024 * 1024; // 5MB chunks
+      if (drawingData.length > maxChunkSize) {
+        showAlert("Drawing is too large. Try making it smaller or using fewer colors.", "warning");
+        return;
+      }
+
+      const response = await fetch('http://localhost:5001/api/drawings/add', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "auth-token": localStorage.getItem("token"),
+          'Content-Type': 'application/json',
+          'auth-token': token
         },
         body: JSON.stringify({
           drawingData,
-          title: `Drawing ${new Date().toLocaleDateString()}`,
-        }),
+          title: `Drawing ${new Date().toLocaleDateString()}`
+        })
       });
 
-      if (response.ok) {
-        setHasChanges(false);
-        showAlert("Drawing saved successfully!", "success");
-        navigate("/drawings");
-      } else {
-        showAlert("Failed to save drawing", "error");
+      if (!response.ok) {
+        if (response.status === 413) {
+          throw new Error('Drawing is too large to save. Try making it smaller.');
+        }
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+          throw new Error('Please login again');
+        }
+        throw new Error('Failed to save drawing');
       }
+
+      setHasChanges(false);
+      showAlert("Drawing saved successfully!", "success");
+      navigate('/drawings');
     } catch (error) {
-      console.error("Error saving drawing:", error);
-      showAlert("Error saving drawing", "error");
+      console.error('Error saving drawing:', error);
+      showAlert(error.message || "Error saving drawing", "error");
     }
   };
 
@@ -159,6 +204,9 @@ const TemporaryCanvas = ({ showAlert }) => {
   };
 
   const handleSwitchToNote = () => {
+    const isLoggedIn = !!localStorage.getItem('token');
+    const targetPath = isLoggedIn ? '/add-note' : '/tempNote';
+
     if (hasChanges) {
       setModalConfig({
         title: 'Switch to Note',
@@ -166,38 +214,87 @@ const TemporaryCanvas = ({ showAlert }) => {
         showAuthButtons: false,
         onConfirm: () => {
           setIsModalOpen(false);
-          navigate('/tempNote');
+          navigate(targetPath);
         }
       });
       setIsModalOpen(true);
     } else {
-      navigate('/tempNote');
+      navigate(targetPath);
     }
   };
 
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    context.fillStyle = 'rgba(17, 24, 39, 0.95)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    setHasChanges(false);
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.download = `drawing-${new Date().toLocaleDateString()}.png`;
+    link.href = canvasRef.current.toDataURL();
+    link.click();
+  };
+
   return (
-    <div className="temp-drawing-container">
+    <div className={`temp-drawing-container theme-${theme}`}>
       <div className="temp-drawing-content">
         <div className="temp-drawing-header">
           <div className="header-left">
-            <button 
-              className="back-button"
-              onClick={handleDiscard}
-              title="Go back"
-            >
+            <button className="back-button" onClick={handleDiscard}>
               <ArrowLeft size={20} />
             </button>
             <h1>Create Drawing</h1>
           </div>
           
-          <button 
-            className="switch-button"
-            onClick={handleSwitchToNote}
-          >
-            <FileText size={20} />
-            Switch to Note
-          </button>
+          <div className="header-right">
+            <button className="feature-button" onClick={() => setShowToolbar(!showToolbar)}>
+              <Palette size={20} />
+              <span>Tools</span>
+            </button>
+            <button className="switch-button" onClick={handleSwitchToNote}>
+              <FileText size={20} />
+              <span>Switch to Note</span>
+            </button>
+          </div>
         </div>
+
+        {showToolbar && (
+          <div className="drawing-toolbar">
+            <div className="toolbar-section">
+              <select 
+                value={strokeSize} 
+                onChange={(e) => setStrokeSize(Number(e.target.value))}
+                className="toolbar-select"
+              >
+                {strokeSizes.map(size => (
+                  <option key={size.value} value={size.value}>{size.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="toolbar-section colors">
+              {colors.map(color => (
+                <button
+                  key={color.value}
+                  className={`color-btn ${strokeColor === color.value ? 'active' : ''}`}
+                  style={{ backgroundColor: color.value }}
+                  onClick={() => setStrokeColor(color.value)}
+                  title={color.name}
+                />
+              ))}
+            </div>
+
+            <div className="toolbar-section">
+              <button className="tool-btn" onClick={clearCanvas}>
+                <Trash2 size={18} />
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+        )}
 
         <canvas
           ref={canvasRef}
@@ -212,32 +309,27 @@ const TemporaryCanvas = ({ showAlert }) => {
         />
 
         <div className="action-buttons">
-          <button 
-            className="action-btn save-btn"
-            onClick={handleSave}
-          >
-            <Save size={20} />
-            Save Drawing
-          </button>
-          
-          <button 
-            className="action-btn discard-btn"
-            onClick={handleDiscard}
-          >
-            <X size={20} />
-            Discard
-          </button>
-        </div>
+          <div className="action-buttons-left">
+            <button className="action-btn" onClick={handleDownload}>
+              <Download size={18} />
+              <span>Download</span>
+            </button>
+          </div>
 
-        <ConfirmationModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onConfirm={modalConfig.onConfirm}
-          title={modalConfig.title}
-          message={modalConfig.message}
-          showAuthButtons={modalConfig.showAuthButtons}
-        />
+          <div className="action-buttons-right">
+            <button className="save-btn" onClick={handleSave}>
+              <Save size={18} />
+              <span>Save Drawing</span>
+            </button>
+          </div>
+        </div>
       </div>
+      
+      <ConfirmationModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        {...modalConfig}
+      />
     </div>
   );
 };
