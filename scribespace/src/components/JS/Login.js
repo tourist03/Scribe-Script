@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import '../CSS//Login.css';
+import { Mail, Lock, GithubIcon } from 'lucide-react';
+import '../CSS/Auth.css';
 
 const Login = (props) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -106,80 +107,65 @@ const Login = (props) => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Welcome to ScribeSpace</h2>
-      <p>Login to continue to your account</p>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email address</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            value={credentials.email}
-            onChange={onChange}
-            autoComplete="email"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            value={credentials.password}
-            onChange={onChange}
-            autoComplete="current-password"
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1 className="auth-title">Welcome Back</h1>
+          <p className="auth-subtitle">Continue your creative journey</p>
         </div>
 
-        <button 
-          type="submit" 
-          className="btn btn-dark"
-          disabled={isLoading}
-        >
-          {isLoading ? "Logging in..." : "Login"}
-        </button>
-        
-        <div className="mt-3">
-          <button 
-            type="button" 
-            className="btn btn-link" 
-            onClick={() => navigate("/signup")}
-          >
-            Don't have an account? Create one
-          </button>
-        </div>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <Mail className="input-icon" size={20} />
+            <input
+              type="email"
+              className="form-input"
+              placeholder="Enter your email"
+              name="email"
+              value={credentials.email}
+              onChange={onChange}
+              required
+            />
+          </div>
 
-        <div className="social-login">
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <Lock className="input-icon" size={20} />
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Enter your password"
+              name="password"
+              value={credentials.password}
+              onChange={onChange}
+              required
+            />
+          </div>
+
           <button 
-            onClick={() => window.location.href='http://localhost:5001/api/auth/google'} 
-            className="social-button google"
+            type="submit" 
+            className="auth-btn"
+            disabled={isLoading}
           >
-            Continue with Google
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
+
           <button 
+            type="button"
             onClick={() => window.location.href='http://localhost:5001/api/auth/github'} 
-            className="social-button github"
+            className="social-button"
           >
+            <GithubIcon size={20} />
             Continue with GitHub
           </button>
-          <button 
-            onClick={() => window.location.href='http://localhost:5001/api/auth/microsoft'} 
-            className="social-button microsoft"
-          >
-            Continue with Microsoft
-          </button>
-          
-          <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
+
+          <div className="auth-link">
+            Don't have an account?
+            <Link to="/signup">Sign Up</Link>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

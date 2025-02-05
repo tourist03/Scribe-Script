@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import '../CSS/Signup.css';
+import { Mail, Lock, User, GithubIcon } from 'lucide-react';
+import '../CSS/Auth.css';
 
 const Signup = (props) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
@@ -63,98 +64,94 @@ const Signup = (props) => {
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-left">
-        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Welcome to ScribeSpace</h1>
-        <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
-          Your creative journey starts here. Join our community of creators and bring your ideas to life.
-        </p>
-      </div>
-      
-      <div className="signup-right">
-        <div className="signup-card">
-          <div className="brand-logo">
-            {/* Add your logo here */}
-          </div>
-          
-          <h2 className="signup-title">Create your account</h2>
-          <p className="signup-subtitle">Start your journey with ScribeSpace</p>
-          
-          <form onSubmit={handleSubmit} className="signup-form">
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="form-input"
-                placeholder="John Doe"
-                value={credentials.name}
-                onChange={onChange}
-                required
-                minLength={3}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="form-input"
-                placeholder="john@example.com"
-                value={credentials.email}
-                onChange={onChange}
-                required
-              />
-              <p className="email-hint">We'll never share your email with anyone else.</p>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="form-input"
-                placeholder="Create a strong password"
-                value={credentials.password}
-                onChange={onChange}
-                required
-                minLength={5}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="cpassword">Confirm Password</label>
-              <input
-                type="password"
-                id="cpassword"
-                name="cpassword"
-                className="form-input"
-                placeholder="Confirm your password"
-                value={credentials.cpassword}
-                onChange={onChange}
-                required
-                minLength={5}
-              />
-            </div>
-
-            <button 
-              type="submit" 
-              className="signup-button"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
-            </button>
-          </form>
-
-          <p className="login-link">
-            Already have an account?
-            <Link to="/login">Sign in</Link>
-          </p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1 className="auth-title">Join ScribeSpace</h1>
+          <p className="auth-subtitle">Start your creative journey today</p>
         </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Full Name</label>
+            <User className="input-icon" size={20} />
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Enter your name"
+              name="name"
+              value={credentials.name}
+              onChange={onChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <Mail className="input-icon" size={20} />
+            <input
+              type="email"
+              className="form-input"
+              placeholder="Enter your email"
+              name="email"
+              value={credentials.email}
+              onChange={onChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <Lock className="input-icon" size={20} />
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Create a password"
+              name="password"
+              value={credentials.password}
+              onChange={onChange}
+              required
+              minLength={5}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Confirm Password</label>
+            <Lock className="input-icon" size={20} />
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Confirm your password"
+              name="cpassword"
+              value={credentials.cpassword}
+              onChange={onChange}
+              required
+              minLength={5}
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="auth-btn"
+            disabled={isLoading}
+          >
+            {isLoading ? "Creating Account..." : "Create Account"}
+          </button>
+
+          <button 
+            type="button"
+            onClick={() => window.location.href='http://localhost:5001/api/auth/github'} 
+            className="social-button"
+          >
+            <GithubIcon size={20} />
+            Continue with GitHub
+          </button>
+
+          <div className="auth-link">
+            Already have an account?
+            <Link to="/login">Sign In</Link>
+          </div>
+        </form>
       </div>
     </div>
   );
