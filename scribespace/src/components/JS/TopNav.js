@@ -5,6 +5,7 @@ import '../CSS/TopNav.css';
 
 const TopNav = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const isLoggedIn = !!localStorage.getItem('token');
 
   const handleLogout = () => {

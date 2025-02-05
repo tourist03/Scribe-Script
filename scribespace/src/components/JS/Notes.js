@@ -3,7 +3,7 @@ import noteContext from "../../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 import { useNavigate } from "react-router-dom";
-import '../CSS/Notes.css'; // Ensure this is imported
+import '../CSS/Notes.css';
 import { PenLine, FileText } from "lucide-react";
 import { EMPTY_NOTES_SVG } from '../../constants/illustrations';
 import ConfirmationModal from './ConfirmationModal';
