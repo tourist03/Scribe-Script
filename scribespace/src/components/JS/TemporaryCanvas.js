@@ -21,7 +21,7 @@ const TemporaryCanvas = ({ showAlert }) => {
   const [strokeColor, setStrokeColor] = useState('#ffffff');
   const [showToolbar, setShowToolbar] = useState(false);
   const [theme, setTheme] = useState('dark');
-  const [title, setTitle] = useState('Untitled Drawing');
+  const [title, setTitle] = useState('');
 
   const colors = [
     { name: 'White', value: '#ffffff' },
@@ -44,21 +44,38 @@ const TemporaryCanvas = ({ showAlert }) => {
     const canvas = canvasRef.current;
     const container = canvas.parentElement;
     
-    canvas.width = container.clientWidth * 2;
-    canvas.height = container.clientHeight * 2;
-    canvas.style.width = `${container.clientWidth}px`;
-    canvas.style.height = `${container.clientHeight}px`;
+    // Make canvas fill the available space
+    const updateCanvasSize = () => {
+      const headerHeight = 80; // Height of the header
+      const footerHeight = 80; // Height of the action buttons
+      const availableHeight = window.innerHeight - headerHeight - footerHeight;
+      
+      canvas.width = container.clientWidth * 2; // Double for retina
+      canvas.height = availableHeight * 2;
+      canvas.style.width = `${container.clientWidth}px`;
+      canvas.style.height = `${availableHeight}px`;
 
-    const context = canvas.getContext('2d');
-    context.scale(2, 2);
-    context.lineCap = 'round';
-    context.strokeStyle = '#ffffff';
-    context.lineWidth = 2;
-    contextRef.current = context;
+      const context = canvas.getContext('2d', { alpha: false }); // Disable alpha for better performance
+      context.scale(2, 2);
+      context.lineCap = 'round';
+      context.lineJoin = 'round'; // Add this for smoother line joins
+      context.strokeStyle = strokeColor;
+      context.lineWidth = strokeSize;
+      
+      // Enable image smoothing
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      
+      contextRef.current = context;
+      
+      // Clear canvas with dark background
+      context.fillStyle = 'rgba(17, 24, 39, 0.95)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    };
 
-    // Clear canvas with dark background
-    context.fillStyle = 'rgba(17, 24, 39, 0.95)';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+    return () => window.removeEventListener('resize', updateCanvasSize);
   }, []);
 
   useEffect(() => {
@@ -70,8 +87,10 @@ const TemporaryCanvas = ({ showAlert }) => {
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(offsetX, offsetY);
+    const context = contextRef.current;
+    
+    context.beginPath();
+    context.moveTo(offsetX, offsetY);
     setIsDrawing(true);
     setHasChanges(true);
   };
@@ -79,10 +98,10 @@ const TemporaryCanvas = ({ showAlert }) => {
   const draw = ({ nativeEvent }) => {
     if (!isDrawing) return;
     const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(offsetX, offsetY);
+    const context = contextRef.current;
+    
+    context.lineTo(offsetX, offsetY);
+    context.stroke();
   };
 
   const stopDrawing = () => {
@@ -272,18 +291,29 @@ const TemporaryCanvas = ({ showAlert }) => {
       }}>
         <input
           type="text"
-          placeholder="Untitled Drawing"
+          placeholder="Enter drawing title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           style={{
-            background: 'transparent',
-            border: 'none',
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             color: 'white',
             fontSize: '1.5rem',
             fontWeight: '500',
             width: '300px',
-            padding: '0.5rem',
-            outline: 'none'
+            padding: '0.75rem 1rem',
+            borderRadius: '8px',
+            outline: 'none',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 2px 8px rgba(139, 92, 246, 0.1)',
+          }}
+          onFocus={(e) => {
+            e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+            e.target.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.2)';
+          }}
+          onBlur={(e) => {
+            e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.target.style.boxShadow = '0 2px 8px rgba(139, 92, 246, 0.1)';
           }}
         />
 
@@ -396,7 +426,15 @@ const TemporaryCanvas = ({ showAlert }) => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={stopDrawing}
-        className="drawing-canvas"
+        style={{
+          flex: 1,
+          width: '100%',
+          background: 'rgba(17, 24, 39, 0.95)',
+          borderRadius: '12px',
+          cursor: 'crosshair',
+          touchAction: 'none',
+          display: 'block', // Important for proper sizing
+        }}
       />
 
       {/* Action Buttons */}
