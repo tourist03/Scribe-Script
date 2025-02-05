@@ -205,7 +205,7 @@ const TemporaryCanvas = ({ showAlert }) => {
 
   const handleSwitchToNote = () => {
     const isLoggedIn = !!localStorage.getItem('token');
-    const targetPath = isLoggedIn ? '/add-note' : '/tempNote';
+    const targetPath = isLoggedIn ? '/notes' : '/tempNote';
 
     if (hasChanges) {
       setModalConfig({
