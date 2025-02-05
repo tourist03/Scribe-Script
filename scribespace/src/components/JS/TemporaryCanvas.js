@@ -22,6 +22,7 @@ const TemporaryCanvas = ({ showAlert }) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [title, setTitle] = useState('');
+  const [lastPoint, setLastPoint] = useState(null);
 
   const colors = [
     { name: 'White', value: '#ffffff' },
@@ -87,10 +88,7 @@ const TemporaryCanvas = ({ showAlert }) => {
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
-    const context = contextRef.current;
-    
-    context.beginPath();
-    context.moveTo(offsetX, offsetY);
+    setLastPoint({ x: offsetX, y: offsetY });
     setIsDrawing(true);
     setHasChanges(true);
   };
@@ -100,13 +98,21 @@ const TemporaryCanvas = ({ showAlert }) => {
     const { offsetX, offsetY } = nativeEvent;
     const context = contextRef.current;
     
-    context.lineTo(offsetX, offsetY);
-    context.stroke();
+    if (lastPoint) {
+      // Draw a line from last point to current point
+      context.beginPath();
+      context.moveTo(lastPoint.x, lastPoint.y);
+      context.lineTo(offsetX, offsetY);
+      context.stroke();
+    }
+    
+    setLastPoint({ x: offsetX, y: offsetY });
   };
 
   const stopDrawing = () => {
-    contextRef.current.closePath();
     setIsDrawing(false);
+    setLastPoint(null);
+    contextRef.current.beginPath(); // Start fresh path
   };
 
   // Touch events support
@@ -134,8 +140,15 @@ const TemporaryCanvas = ({ showAlert }) => {
     const offsetX = touch.clientX - rect.left;
     const offsetY = touch.clientY - rect.top;
     
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
+    if (lastPoint) {
+      const context = contextRef.current;
+      context.beginPath();
+      context.moveTo(lastPoint.x, lastPoint.y);
+      context.lineTo(offsetX, offsetY);
+      context.stroke();
+    }
+    
+    setLastPoint({ x: offsetX, y: offsetY });
   };
 
   const handleSave = async () => {
@@ -247,11 +260,41 @@ const TemporaryCanvas = ({ showAlert }) => {
   };
 
   const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    context.fillStyle = 'rgba(17, 24, 39, 0.95)';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    setHasChanges(false);
+    const performClear = () => {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      
+      // Reset the canvas completely
+      canvas.width = canvas.width; // This clears the canvas
+      
+      // Reapply necessary context settings
+      context.scale(2, 2);
+      context.lineCap = 'round';
+      context.lineJoin = 'round';
+      context.strokeStyle = strokeColor;
+      context.lineWidth = strokeSize;
+      
+      // Fill with background color
+      context.fillStyle = 'rgba(17, 24, 39, 0.95)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      
+      setHasChanges(false);
+    };
+
+    if (hasChanges) {
+      setModalConfig({
+        title: 'Clear Canvas',
+        message: 'Are you sure you want to clear the canvas? This action cannot be undone.',
+        showAuthButtons: false,
+        onConfirm: () => {
+          performClear();
+          setIsModalOpen(false);
+        }
+      });
+      setIsModalOpen(true);
+    } else {
+      performClear();
+    }
   };
 
   const handleDownload = () => {
@@ -277,17 +320,49 @@ const TemporaryCanvas = ({ showAlert }) => {
     transition: 'all 0.2s ease'
   };
 
+  // Add useEffect for click outside handling
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const toolbarElement = document.getElementById('drawing-toolbar');
+      const toolButton = document.getElementById('tool-button');
+      
+      if (showToolbar && 
+          toolbarElement && 
+          !toolbarElement.contains(event.target) &&
+          !toolButton.contains(event.target)) {
+        setShowToolbar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showToolbar]);
+
   return (
-    <div className="temp-drawing-container">
-      {/* Header Section */}
+    <div className="temp-drawing-container" style={{
+      minHeight: '100vh',
+      width: '100vw',
+      margin: 0,
+      padding: '39px 0 0',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      background: 'rgba(17, 24, 39, 0.95)',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
       <div className="drawing-header" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '1rem 2rem',
+        padding: '0.75rem 2rem',
         background: 'rgba(17, 24, 39, 0.8)',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        height: '70px'
       }}>
         <input
           type="text"
@@ -298,10 +373,10 @@ const TemporaryCanvas = ({ showAlert }) => {
             background: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             color: 'white',
-            fontSize: '1.5rem',
+            fontSize: '1.2rem',
             fontWeight: '500',
             width: '300px',
-            padding: '0.75rem 1rem',
+            padding: '0.5rem 1rem',
             borderRadius: '8px',
             outline: 'none',
             transition: 'all 0.2s ease',
@@ -317,20 +392,29 @@ const TemporaryCanvas = ({ showAlert }) => {
           }}
         />
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button 
-            style={buttonStyle}
+            id="tool-button"
+            style={{
+              ...buttonStyle,
+              padding: '0.5rem 1rem',
+              fontSize: '0.9rem'
+            }}
             onClick={() => setShowToolbar(!showToolbar)}
           >
-            <Palette size={20} />
+            <Palette size={18} />
             <span>Tools</span>
           </button>
 
           <button 
-            style={buttonStyle}
+            style={{
+              ...buttonStyle,
+              padding: '0.5rem 1rem',
+              fontSize: '0.9rem'
+            }}
             onClick={handleSwitchToNote}
           >
-            <FileText size={20} />
+            <FileText size={18} />
             <span>Switch to Note</span>
           </button>
         </div>
@@ -338,19 +422,22 @@ const TemporaryCanvas = ({ showAlert }) => {
 
       {/* Tools Panel - Floating */}
       {showToolbar && (
-        <div style={{
-          position: 'absolute',
-          top: '80px',
-          left: '2rem',
-          background: 'linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.95))',
-          backdropFilter: 'blur(10px)',
-          borderRadius: '12px',
-          padding: '1.5rem',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          zIndex: 100,
-          minWidth: '250px'
-        }}>
+        <div 
+          id="drawing-toolbar"
+          style={{
+            position: 'absolute',
+            top: '80px',
+            left: '2rem',
+            background: 'linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.95))',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            zIndex: 100,
+            minWidth: '250px'
+          }}
+        >
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ 
               color: '#94a3b8', 
@@ -429,11 +516,12 @@ const TemporaryCanvas = ({ showAlert }) => {
         style={{
           flex: 1,
           width: '100%',
-          background: 'rgba(17, 24, 39, 0.95)',
-          borderRadius: '12px',
+          height: 'calc(100vh - 130px)', // Adjusted for new header/footer heights
+          display: 'block',
           cursor: 'crosshair',
           touchAction: 'none',
-          display: 'block', // Important for proper sizing
+          margin: 0,
+          padding: 0
         }}
       />
 
@@ -441,25 +529,56 @@ const TemporaryCanvas = ({ showAlert }) => {
       <div style={{
         display: 'flex',
         justifyContent: 'flex-end',
-        gap: '1rem',
-        padding: '1rem 2rem',
+        gap: '0.75rem',
+        padding: '0.75rem 2rem',
         background: 'rgba(17, 24, 39, 0.8)',
         backdropFilter: 'blur(10px)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        height: '60px'
       }}>
-        <button style={buttonStyle} onClick={handleDownload}>
+        <button 
+          style={{
+            ...buttonStyle,
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem'
+          }} 
+          onClick={handleDownload}
+        >
           <Download size={18} />
           <span>Download</span>
         </button>
-        <button style={buttonStyle} onClick={clearCanvas}>
+        <button 
+          style={{
+            ...buttonStyle,
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem'
+          }} 
+          onClick={clearCanvas}
+        >
           <Trash2 size={18} />
           <span>Clear</span>
         </button>
-        <button style={buttonStyle} onClick={handleSave}>
+        <button 
+          style={{
+            ...buttonStyle,
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem'
+          }} 
+          onClick={handleSave}
+        >
           <Save size={18} />
           <span>Save Drawing</span>
         </button>
       </div>
+
+      <ConfirmationModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        onConfirm={modalConfig.onConfirm}
+        showAuthButtons={modalConfig.showAuthButtons}
+      />
     </div>
   );
 };
