@@ -78,3 +78,137 @@
     width: 95%;
   }
 }
+
+/* Update the logged-in container styles */
+.logged-in-container {
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 39px 0 0; /* Same padding as we used in TemporaryCanvas */
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.98), rgba(31, 41, 55, 0.98));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.welcome-header {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.welcome-header h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+}
+
+.welcome-header p {
+  color: #94a3b8;
+  font-size: 1.4rem;
+}
+
+.action-blocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+  gap: 2rem;
+  padding: 0 4rem;
+  flex: 1;
+  max-height: calc(100vh - 200px); /* Account for header and top padding */
+}
+
+.action-block {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 24px;
+  padding: 2.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.action-block:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.block-icon {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.block-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.block-content h2 {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.block-content p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: auto;
+}
+
+.action-link {
+  color: #8b5cf6;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.action-block:hover .action-link {
+  color: #ec4899;
+  transform: translateX(5px);
+}
+
+/* Different accent colors and gradients for each block */
+.action-block.notes {
+  background: linear-gradient(145deg, rgba(139, 92, 246, 0.05), rgba(139, 92, 246, 0.02));
+}
+
+.action-block.drawings {
+  background: linear-gradient(145deg, rgba(236, 72, 153, 0.05), rgba(236, 72, 153, 0.02));
+}
+
+.action-block.saved {
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .action-blocks {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .action-blocks {
+    grid-template-columns: 1fr;
+    padding: 0 1.5rem;
+  }
+  
+  .welcome-header h1 {
+    font-size: 3rem;
+  }
+}

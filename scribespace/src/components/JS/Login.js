@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import '../CSS//Login.css';
+import { Mail, Lock, GithubIcon } from 'lucide-react';
+import '../CSS/Auth.css';
 
 const Login = (props) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -68,34 +69,86 @@ const Login = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const host = "http://localhost:5001";
-    
+
     try {
-      const response = await fetch(`${host}/api/auth/login`, {
+      const response = await fetch("http://localhost:5001/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-        }),
+        body: JSON.stringify({ email: credentials.email, password: credentials.password }),
       });
 
       const json = await response.json();
 
       if (json.success) {
-        localStorage.setItem('token', json.authToken);
-        props.showAlert("Login successful!", "success");
-        
-        // Check and save any pending items, then navigate
-        const redirectPath = await savePendingItems(json.authToken);
-        navigate(redirectPath);
+        localStorage.setItem("token", json.authToken);
+        props.showAlert("Logged in successfully!", "success");
+
+        // Handle pending temporary note
+        const pendingNote = localStorage.getItem('pendingTempNote');
+        if (pendingNote) {
+          try {
+            const { title, content } = JSON.parse(pendingNote);
+            const noteResponse = await fetch("http://localhost:5001/api/notes/addnote", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "auth-token": json.authToken,
+              },
+              body: JSON.stringify({ 
+                title: title,
+                description: content,
+                tag: "General"
+              }),
+            });
+
+            if (noteResponse.ok) {
+              localStorage.removeItem('pendingTempNote');
+              props.showAlert("Your note has been saved!", "success");
+              navigate('/notes');
+              return;
+            }
+          } catch (error) {
+            console.error('Error saving pending note:', error);
+          }
+        }
+
+        // Handle pending temporary drawing
+        const pendingDrawing = localStorage.getItem('pendingTempDrawing');
+        if (pendingDrawing) {
+          try {
+            const { drawingData, title } = JSON.parse(pendingDrawing);
+            const drawingResponse = await fetch("http://localhost:5001/api/drawings/add", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "auth-token": json.authToken,
+              },
+              body: JSON.stringify({
+                drawingData,
+                title: title || `Drawing ${new Date().toLocaleDateString()}`
+              }),
+            });
+
+            if (drawingResponse.ok) {
+              localStorage.removeItem('pendingTempDrawing');
+              props.showAlert("Your drawing has been saved!", "success");
+              navigate('/drawings');
+              return;
+            }
+          } catch (error) {
+            console.error('Error saving pending drawing:', error);
+          }
+        }
+
+        navigate('/');
       } else {
-        props.showAlert("Invalid credentials", "danger");
+        props.showAlert(json.error || "Invalid credentials", "error");
       }
     } catch (error) {
-      props.showAlert("An error occurred", "danger");
+      console.error('Login error:', error);
+      props.showAlert("An error occurred during login", "error");
     } finally {
       setIsLoading(false);
     }
@@ -106,80 +159,65 @@ const Login = (props) => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Welcome to ScribeSpace</h2>
-      <p>Login to continue to your account</p>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email address</label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            value={credentials.email}
-            onChange={onChange}
-            autoComplete="email"
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            value={credentials.password}
-            onChange={onChange}
-            autoComplete="current-password"
-          />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1 className="auth-title">Welcome Back</h1>
+          <p className="auth-subtitle">Continue your creative journey</p>
         </div>
 
-        <button 
-          type="submit" 
-          className="btn btn-dark"
-          disabled={isLoading}
-        >
-          {isLoading ? "Logging in..." : "Login"}
-        </button>
-        
-        <div className="mt-3">
-          <button 
-            type="button" 
-            className="btn btn-link" 
-            onClick={() => navigate("/signup")}
-          >
-            Don't have an account? Create one
-          </button>
-        </div>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <Mail className="input-icon" size={20} />
+            <input
+              type="email"
+              className="form-input"
+              placeholder="Enter your email"
+              name="email"
+              value={credentials.email}
+              onChange={onChange}
+              required
+            />
+          </div>
 
-        <div className="social-login">
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <Lock className="input-icon" size={20} />
+            <input
+              type="password"
+              className="form-input"
+              placeholder="Enter your password"
+              name="password"
+              value={credentials.password}
+              onChange={onChange}
+              required
+            />
+          </div>
+
           <button 
-            onClick={() => window.location.href='http://localhost:5001/api/auth/google'} 
-            className="social-button google"
+            type="submit" 
+            className="auth-btn"
+            disabled={isLoading}
           >
-            Continue with Google
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
+
           <button 
+            type="button"
             onClick={() => window.location.href='http://localhost:5001/api/auth/github'} 
-            className="social-button github"
+            className="social-button"
           >
+            <GithubIcon size={20} />
             Continue with GitHub
           </button>
-          <button 
-            onClick={() => window.location.href='http://localhost:5001/api/auth/microsoft'} 
-            className="social-button microsoft"
-          >
-            Continue with Microsoft
-          </button>
-          
-          <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
+
+          <div className="auth-link">
+            Don't have an account?
+            <Link to="/signup">Sign Up</Link>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
