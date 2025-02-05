@@ -118,6 +118,7 @@ const Login = (props) => {
         const pendingDrawing = localStorage.getItem('pendingTempDrawing');
         if (pendingDrawing) {
           try {
+            const { drawingData, title } = JSON.parse(pendingDrawing);
             const drawingResponse = await fetch("http://localhost:5001/api/drawings/add", {
               method: "POST",
               headers: {
@@ -125,8 +126,8 @@ const Login = (props) => {
                 "auth-token": json.authToken,
               },
               body: JSON.stringify({
-                drawingData: pendingDrawing,
-                title: `Drawing ${new Date().toLocaleDateString()}`
+                drawingData,
+                title: title || `Drawing ${new Date().toLocaleDateString()}`
               }),
             });
 

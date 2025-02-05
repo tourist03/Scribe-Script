@@ -21,6 +21,7 @@ const TemporaryCanvas = ({ showAlert }) => {
   const [strokeColor, setStrokeColor] = useState('#ffffff');
   const [showToolbar, setShowToolbar] = useState(false);
   const [theme, setTheme] = useState('dark');
+  const [title, setTitle] = useState('Untitled Drawing');
 
   const colors = [
     { name: 'White', value: '#ffffff' },
@@ -129,7 +130,10 @@ const TemporaryCanvas = ({ showAlert }) => {
 
     if (!isLoggedIn) {
       const drawingData = canvasRef.current.toDataURL('image/jpeg', 0.5);
-      localStorage.setItem('pendingTempDrawing', drawingData);
+      localStorage.setItem('pendingTempDrawing', JSON.stringify({
+        drawingData,
+        title: title.trim() || 'Untitled Drawing'
+      }));
       
       setModalConfig({
         title: 'Login Required',
@@ -147,7 +151,7 @@ const TemporaryCanvas = ({ showAlert }) => {
     try {
       const drawingData = canvasRef.current.toDataURL('image/jpeg', 0.5);
       
-      const maxChunkSize = 5 * 1024 * 1024; // 5MB chunks
+      const maxChunkSize = 5 * 1024 * 1024;
       if (drawingData.length > maxChunkSize) {
         showAlert("Drawing is too large. Try making it smaller or using fewer colors.", "warning");
         return;
@@ -161,7 +165,7 @@ const TemporaryCanvas = ({ showAlert }) => {
         },
         body: JSON.stringify({
           drawingData,
-          title: `Drawing ${new Date().toLocaleDateString()}`
+          title: title.trim() || 'Untitled Drawing'
         })
       });
 
@@ -238,98 +242,186 @@ const TemporaryCanvas = ({ showAlert }) => {
     link.click();
   };
 
+  // First, let's create a common button style object
+  const buttonStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    padding: '0.75rem 1.5rem',
+    background: 'linear-gradient(145deg, #8b5cf6 0%, #ec4899 100%)',
+    border: 'none',
+    borderRadius: '8px',
+    color: 'white',
+    fontWeight: '600',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
+  };
+
   return (
-    <div className={`temp-drawing-container theme-${theme}`}>
-      <div className="temp-drawing-content">
-        <div className="temp-drawing-header">
-          <div className="header-left">
-            <button className="back-button" onClick={handleDiscard}>
-              <ArrowLeft size={20} />
-            </button>
-            <h1>Create Drawing</h1>
-          </div>
-          
-          <div className="header-right">
-            <button className="feature-button" onClick={() => setShowToolbar(!showToolbar)}>
-              <Palette size={20} />
-              <span>Tools</span>
-            </button>
-            <button className="switch-button" onClick={handleSwitchToNote}>
-              <FileText size={20} />
-              <span>Switch to Note</span>
-            </button>
-          </div>
+    <div className="temp-drawing-container">
+      {/* Header Section */}
+      <div className="drawing-header" style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '1rem 2rem',
+        background: 'rgba(17, 24, 39, 0.8)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <input
+          type="text"
+          placeholder="Untitled Drawing"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'white',
+            fontSize: '1.5rem',
+            fontWeight: '500',
+            width: '300px',
+            padding: '0.5rem',
+            outline: 'none'
+          }}
+        />
+
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button 
+            style={buttonStyle}
+            onClick={() => setShowToolbar(!showToolbar)}
+          >
+            <Palette size={20} />
+            <span>Tools</span>
+          </button>
+
+          <button 
+            style={buttonStyle}
+            onClick={handleSwitchToNote}
+          >
+            <FileText size={20} />
+            <span>Switch to Note</span>
+          </button>
         </div>
+      </div>
 
-        {showToolbar && (
-          <div className="drawing-toolbar">
-            <div className="toolbar-section">
-              <select 
-                value={strokeSize} 
-                onChange={(e) => setStrokeSize(Number(e.target.value))}
-                className="toolbar-select"
-              >
-                {strokeSizes.map(size => (
-                  <option key={size.value} value={size.value}>{size.name}</option>
-                ))}
-              </select>
-            </div>
+      {/* Tools Panel - Floating */}
+      {showToolbar && (
+        <div style={{
+          position: 'absolute',
+          top: '80px',
+          left: '2rem',
+          background: 'linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.95))',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          padding: '1.5rem',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          zIndex: 100,
+          minWidth: '250px'
+        }}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ 
+              color: '#94a3b8', 
+              marginBottom: '0.5rem', 
+              display: 'block',
+              fontSize: '0.9rem'
+            }}>
+              Brush Size
+            </label>
+            <select 
+              value={strokeSize} 
+              onChange={(e) => setStrokeSize(Number(e.target.value))}
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '6px',
+                color: 'white',
+                cursor: 'pointer'
+              }}
+            >
+              {strokeSizes.map(size => (
+                <option key={size.value} value={size.value}>{size.name}</option>
+              ))}
+            </select>
+          </div>
 
-            <div className="toolbar-section colors">
+          <div>
+            <label style={{ 
+              color: '#94a3b8', 
+              marginBottom: '0.5rem', 
+              display: 'block',
+              fontSize: '0.9rem'
+            }}>
+              Colors
+            </label>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '0.5rem' 
+            }}>
               {colors.map(color => (
                 <button
                   key={color.value}
-                  className={`color-btn ${strokeColor === color.value ? 'active' : ''}`}
-                  style={{ backgroundColor: color.value }}
                   onClick={() => setStrokeColor(color.value)}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '8px',
+                    background: color.value,
+                    border: strokeColor === color.value 
+                      ? '2px solid white'
+                      : '2px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    transform: strokeColor === color.value ? 'scale(1.1)' : 'scale(1)'
+                  }}
                   title={color.name}
                 />
               ))}
             </div>
-
-            <div className="toolbar-section">
-              <button className="tool-btn" onClick={clearCanvas}>
-                <Trash2 size={18} />
-                <span>Clear</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        <canvas
-          ref={canvasRef}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={stopDrawing}
-          className="drawing-canvas"
-        />
-
-        <div className="action-buttons">
-          <div className="action-buttons-left">
-            <button className="action-btn" onClick={handleDownload}>
-              <Download size={18} />
-              <span>Download</span>
-            </button>
-          </div>
-
-          <div className="action-buttons-right">
-            <button className="save-btn" onClick={handleSave}>
-              <Save size={18} />
-              <span>Save Drawing</span>
-            </button>
           </div>
         </div>
-      </div>
-      
-      <ConfirmationModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        {...modalConfig}
+      )}
+
+      <canvas
+        ref={canvasRef}
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={stopDrawing}
+        className="drawing-canvas"
       />
+
+      {/* Action Buttons */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        gap: '1rem',
+        padding: '1rem 2rem',
+        background: 'rgba(17, 24, 39, 0.8)',
+        backdropFilter: 'blur(10px)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        <button style={buttonStyle} onClick={handleDownload}>
+          <Download size={18} />
+          <span>Download</span>
+        </button>
+        <button style={buttonStyle} onClick={clearCanvas}>
+          <Trash2 size={18} />
+          <span>Clear</span>
+        </button>
+        <button style={buttonStyle} onClick={handleSave}>
+          <Save size={18} />
+          <span>Save Drawing</span>
+        </button>
+      </div>
     </div>
   );
 };
