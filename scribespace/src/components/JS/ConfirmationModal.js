@@ -25,10 +25,10 @@ const ConfirmationModal = ({
 
         {showAuthButtons ? (
           <div className="modal-auth-buttons">
-            <Link to="/login" className="modal-btn login">
+            <Link to="/login" className="modal-btn login" onClick={onClose}>
               Login
             </Link>
-            <Link to="/signup" className="modal-btn signup">
+            <Link to="/signup" className="modal-btn signup" onClick={onClose}>
               Sign Up
             </Link>
           </div>

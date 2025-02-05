@@ -1,100 +1,155 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Save, X, FileText, ArrowLeft } from "lucide-react";
-import ConfirmationModal from "./ConfirmationModal";
-import "../CSS/TemporaryCanvas.css";
+import React, { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Save, X, ArrowLeft, FileText } from 'lucide-react';
+import ConfirmationModal from './ConfirmationModal';
 
 const TemporaryCanvas = ({ showAlert }) => {
-  const navigate = useNavigate();
   const canvasRef = useRef(null);
+  const contextRef = useRef(null);
+  const navigate = useNavigate();
   const [isDrawing, setIsDrawing] = useState(false);
-  const [context, setContext] = useState(null);
-  const [title, setTitle] = useState("");
-  const [hasDrawing, setHasDrawing] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalConfig, setModalConfig] = useState({});
+  const [modalConfig, setModalConfig] = useState({
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    showAuthButtons: false
+  });
   const isLoggedIn = !!localStorage.getItem('token');
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = window.innerWidth * 0.8;
-    canvas.height = window.innerHeight * 0.6;
+    const container = canvas.parentElement;
+    
+    canvas.width = container.clientWidth * 2;
+    canvas.height = container.clientHeight * 2;
+    canvas.style.width = `${container.clientWidth}px`;
+    canvas.style.height = `${container.clientHeight}px`;
 
-    const ctx = canvas.getContext("2d");
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    setContext(ctx);
+    const context = canvas.getContext('2d');
+    context.scale(2, 2);
+    context.lineCap = 'round';
+    context.strokeStyle = '#ffffff';
+    context.lineWidth = 2;
+    contextRef.current = context;
+
+    // Clear canvas with dark background
+    context.fillStyle = 'rgba(17, 24, 39, 0.95)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
   }, []);
 
-  const getCoordinates = (e) => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    if (e.touches) {
-      return {
-        offsetX: (e.touches[0].clientX - rect.left) * scaleX,
-        offsetY: (e.touches[0].clientY - rect.top) * scaleY,
-      };
-    }
-    return {
-      offsetX: (e.clientX - rect.left) * scaleX,
-      offsetY: (e.clientY - rect.top) * scaleY,
-    };
-  };
-
-  const handleStartDrawing = (e) => {
+  const startDrawing = ({ nativeEvent }) => {
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
-    setHasDrawing(true);
-    const coords = getCoordinates(e);
-    context.beginPath();
-    context.moveTo(coords.offsetX, coords.offsetY);
-    // Draw a small dot at the start point
-    context.lineTo(coords.offsetX + 0.1, coords.offsetY + 0.1);
-    context.stroke();
+    setHasChanges(true);
   };
 
-  const draw = (e) => {
+  const draw = ({ nativeEvent }) => {
     if (!isDrawing) return;
-    const coords = getCoordinates(e);
-    context.lineTo(coords.offsetX, coords.offsetY);
-    context.stroke();
+    const { offsetX, offsetY } = nativeEvent;
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
   };
 
   const stopDrawing = () => {
-    context.closePath();
+    contextRef.current.closePath();
     setIsDrawing(false);
   };
 
-  const handleClear = () => {
-    if (hasDrawing) {
+  // Touch events support
+  const handleTouchStart = (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const offsetX = touch.clientX - rect.left;
+    const offsetY = touch.clientY - rect.top;
+    
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(offsetX, offsetY);
+    setIsDrawing(true);
+    setHasChanges(true);
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    if (!isDrawing) return;
+    
+    const touch = e.touches[0];
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const offsetX = touch.clientX - rect.left;
+    const offsetY = touch.clientY - rect.top;
+    
+    contextRef.current.lineTo(offsetX, offsetY);
+    contextRef.current.stroke();
+  };
+
+  const handleSave = async () => {
+    if (!hasChanges) {
+      showAlert("Make some changes before saving!", "warning");
+      return;
+    }
+
+    if (!isLoggedIn) {
+      // Store drawing data temporarily
+      const drawingData = canvasRef.current.toDataURL();
+      localStorage.setItem('pendingTempDrawing', drawingData);
+      
       setModalConfig({
-        title: 'Clear Canvas',
-        message: 'Are you sure you want to clear the canvas? This action cannot be undone.',
+        title: 'Login Required',
+        message: 'Please login or create an account to save your drawing.',
+        showAuthButtons: true,
         onConfirm: () => {
-          const ctx = context;
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-          setHasDrawing(false);
+          navigate('/login');
           setIsModalOpen(false);
         }
       });
       setIsModalOpen(true);
-    } else {
-      const ctx = context;
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      return;
+    }
+
+    try {
+      const drawingData = canvasRef.current.toDataURL();
+      const response = await fetch("http://localhost:5001/api/drawings/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          drawingData,
+          title: `Drawing ${new Date().toLocaleDateString()}`,
+        }),
+      });
+
+      if (response.ok) {
+        setHasChanges(false);
+        showAlert("Drawing saved successfully!", "success");
+        navigate("/drawings");
+      } else {
+        showAlert("Failed to save drawing", "error");
+      }
+    } catch (error) {
+      console.error("Error saving drawing:", error);
+      showAlert("Error saving drawing", "error");
     }
   };
 
-  const handleClose = () => {
-    if (hasDrawing) {
+  const handleDiscard = () => {
+    if (hasChanges) {
       setModalConfig({
-        title: 'Leave Page',
-        message: 'You have unsaved changes. Are you sure you want to leave? Your drawing will be lost.',
+        title: 'Discard Changes',
+        message: 'Are you sure you want to discard your drawing? This cannot be undone.',
+        showAuthButtons: false,
         onConfirm: () => {
-          navigate('/');
           setIsModalOpen(false);
+          navigate('/');
         }
       });
       setIsModalOpen(true);
@@ -103,122 +158,88 @@ const TemporaryCanvas = ({ showAlert }) => {
     }
   };
 
-  const handleSave = async () => {
-    const canvas = canvasRef.current;
-    const drawingData = canvas.toDataURL();
-
-    if (localStorage.getItem("token")) {
-      try {
-        const response = await fetch("http://localhost:5001/api/drawings/add", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            drawingData,
-            title: title || `Drawing ${new Date().toLocaleDateString()}`,
-          }),
-        });
-
-        if (response.ok) {
-          showAlert("Drawing saved successfully!", "success");
-          navigate("/drawings");
-        } else {
-          console.error("Failed to save drawing");
-          showAlert("Failed to save drawing", "error");
+  const handleSwitchToNote = () => {
+    if (hasChanges) {
+      setModalConfig({
+        title: 'Switch to Note',
+        message: 'You have unsaved changes. Are you sure you want to switch to note mode?',
+        showAuthButtons: false,
+        onConfirm: () => {
+          setIsModalOpen(false);
+          navigate('/tempNote');
         }
-      } catch (error) {
-        console.error("Error saving drawing:", error);
-        showAlert("Error saving drawing", "error");
-      }
+      });
+      setIsModalOpen(true);
     } else {
-      localStorage.setItem("pendingTempDrawing", drawingData);
-      navigate("/login");
+      navigate('/tempNote');
     }
   };
 
-  const handleTouchStart = (e) => {
-    e.preventDefault();
-    handleStartDrawing(e.touches[0]);
-  };
-
-  const handleTouchMove = (e) => {
-    e.preventDefault();
-    draw(e.touches[0]);
-  };
-
   return (
-    <div className="temp-draw-container">
-      <div className="temp-draw-header">
-        <button className="header-btn back-btn" onClick={handleClose}>
-          <ArrowLeft size={18} />
-          Back
-        </button>
-        <button 
-          className="header-btn switch-btn" 
-          onClick={() => navigate(isLoggedIn ? '/notes' : '/tempNote')}
-        >
-          <FileText size={18} />
-          Switch to Notes
-        </button>
-      </div>
-
-      <div className="temp-draw-content">
-        <h1 className="temp-draw-title">Create Quick Drawing</h1>
-        <p className="temp-draw-subtitle">Express yourself through art - no account needed</p>
-
-        <div className="drawing-form">
-          <div className="input-wrapper">
-            <input
-              type="text"
-              placeholder="Give your masterpiece a title..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="title-input"
-            />
+    <div className="temp-drawing-container">
+      <div className="temp-drawing-content">
+        <div className="temp-drawing-header">
+          <div className="header-left">
+            <button 
+              className="back-button"
+              onClick={handleDiscard}
+              title="Go back"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <h1>Create Drawing</h1>
           </div>
-
-          <div className="canvas-wrapper">
-            <canvas
-              ref={canvasRef}
-              onMouseDown={handleStartDrawing}
-              onMouseUp={stopDrawing}
-              onMouseMove={draw}
-              onMouseLeave={stopDrawing}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={stopDrawing}
-            />
-          </div>
+          
+          <button 
+            className="switch-button"
+            onClick={handleSwitchToNote}
+          >
+            <FileText size={20} />
+            Switch to Note
+          </button>
         </div>
+
+        <canvas
+          ref={canvasRef}
+          onMouseDown={startDrawing}
+          onMouseMove={draw}
+          onMouseUp={stopDrawing}
+          onMouseLeave={stopDrawing}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={stopDrawing}
+          className="drawing-canvas"
+        />
 
         <div className="action-buttons">
-          <button className="action-btn clear-btn" onClick={handleClear}>
-            Clear Canvas
+          <button 
+            className="action-btn save-btn"
+            onClick={handleSave}
+          >
+            <Save size={20} />
+            Save Drawing
           </button>
-          <div className="right-buttons">
-            <button className="action-btn save-btn" onClick={handleSave}>
-              <Save size={20} />
-              Save Drawing
-            </button>
-            <button className="action-btn close-btn" onClick={handleClose}>
-              <X size={20} />
-              Close
-            </button>
-          </div>
+          
+          <button 
+            className="action-btn discard-btn"
+            onClick={handleDiscard}
+          >
+            <X size={20} />
+            Discard
+          </button>
         </div>
-      </div>
 
-      <ConfirmationModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={modalConfig.onConfirm}
-        title={modalConfig.title}
-        message={modalConfig.message}
-      />
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={modalConfig.onConfirm}
+          title={modalConfig.title}
+          message={modalConfig.message}
+          showAuthButtons={modalConfig.showAuthButtons}
+        />
+      </div>
     </div>
   );
 };
 
-export default TemporaryCanvas;
+export default TemporaryCanvas; 

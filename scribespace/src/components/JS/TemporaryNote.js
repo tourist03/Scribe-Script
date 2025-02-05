@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, X, PenLine } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 import '../CSS/TemporaryNote.css';

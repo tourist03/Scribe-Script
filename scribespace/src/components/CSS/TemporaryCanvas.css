@@ -1,203 +1,141 @@
-.temp-draw-container {
+.temp-drawing-container {
   min-height: 100vh;
-  background: linear-gradient(145deg, 
-    rgba(20, 10, 30, 0.98),
-    rgba(60, 20, 50, 0.98)
-  );
-  padding: 2rem;
-  padding-top: calc(var(--header-height) + 2rem);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(145deg, #111827, #1f2937);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
-.temp-draw-header {
-  max-width: 1200px;
-  margin: 0 auto 2rem;
+.temp-drawing-content {
+  padding: 1rem 2rem;
+  padding-top: 64px;
+  flex: 1;
   display: flex;
+  flex-direction: column;
+}
+
+.temp-drawing-header {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
 }
 
-.header-btn {
+.header-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+.back-button, .switch-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-button:hover, .switch-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.switch-button {
+  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  color: white;
   padding: 0.75rem 1.25rem;
   border: none;
-  border-radius: 12px;
-  font-size: 0.95rem;
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.back-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateX(-2px);
-}
-
-.switch-btn {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  color: white;
-  font-weight: 600;
-}
-
-.switch-btn:hover {
-  background: linear-gradient(135deg, #9333ea, #f472b6);
+.switch-button:hover {
+  opacity: 0.9;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
 }
 
-.temp-draw-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: rgba(35, 20, 45, 0.8);
-  backdrop-filter: blur(12px);
-  padding: 2.5rem;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.temp-draw-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.temp-draw-subtitle {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 2.5rem;
-}
-
-.drawing-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.input-wrapper {
-  width: 100%;
-}
-
-.title-input {
-  width: 100%;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+.drawing-canvas {
+  flex: 1;
+  background: rgba(17, 24, 39, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  font-size: 1rem;
-  color: #ffffff;
-  transition: all 0.2s ease;
-}
-
-.title-input:focus {
-  outline: none;
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-}
-
-.canvas-wrapper {
-  width: 100%;
-  background: rgba(20, 10, 30, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.2s ease;
-  margin: 2rem 0;
-}
-
-canvas {
-  display: block;
-  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 1rem;
+  cursor: crosshair;
+  touch-action: none;
+  max-height: calc(100vh - 200px);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .action-buttons {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 2rem;
-}
-
-.right-buttons {
-  display: flex;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex: 1;
   padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #ffffff;
-}
-
-.clear-btn {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.clear-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  color: white;
+  border: none;
 }
 
 .save-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-.close-btn {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+.discard-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.close-btn:hover {
-  background: rgba(239, 68, 68, 0.25);
-  transform: translateY(-2px);
+.discard-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-@media (max-width: 768px) {
-  .temp-draw-container {
+@media (max-width: 640px) {
+  .temp-drawing-content {
     padding: 1rem;
-  }
-
-  .temp-draw-content {
-    padding: 1.5rem;
-  }
-
-  .temp-draw-title {
-    font-size: 2rem;
+    padding-top: 64px;
   }
 
   .action-buttons {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .right-buttons {
-    width: 100%;
     flex-direction: column;
   }
 
   .action-btn {
     width: 100%;
-    justify-content: center;
   }
 } 
