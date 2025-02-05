@@ -100,6 +100,39 @@
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
 }
 
+.modal-auth-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-btn.login,
+.modal-btn.signup {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-btn.login {
+  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  color: white;
+}
+
+.modal-btn.signup {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
