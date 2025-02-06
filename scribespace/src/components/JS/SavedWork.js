@@ -10,7 +10,7 @@ const SavedWork = ({ showAlert }) => {
   const [notes, setNotes] = useState([]);
   const [drawings, setDrawings] = useState([]);
   const [activeTab, setActiveTab] = useState('notes');
-  const [editingNote,setEditingNote] = useState(null);
+  const [editingNote, setEditingNote] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemType, setItemType] = useState('');
@@ -191,6 +191,9 @@ const SavedWork = ({ showAlert }) => {
       <div key={note._id} className="card note-card">
         <h3>{note.title}</h3>
         <p>{note.description}</p>
+        <span className={`note-tag ${!note.tag?.trim() ? 'no-tag' : ''}`}>
+          {note.tag?.trim() ? note.tag : '# Untagged'}
+        </span>
         <div className="card-footer">
           <span className="date">{formatDate(note.date)}</span>
           <div className="card-actions">
@@ -241,7 +244,73 @@ const SavedWork = ({ showAlert }) => {
       <div className="content-grid">
         {activeTab === 'notes' ? (
           notes.length > 0 ? (
-            notes.map(note => renderNoteCard(note))
+            notes.map((note) => (
+              <div key={note._id} className="note-card">
+                {editingNote && editingNote.id === note._id ? (
+                  <div className="edit-note-form">
+                    <input
+                      type="text"
+                      value={editingNote.title}
+                      onChange={(e) => setEditingNote({
+                        ...editingNote,
+                        title: e.target.value
+                      })}
+                      className="edit-input"
+                      placeholder="Enter title"
+                    />
+                    <textarea
+                      value={editingNote.description}
+                      onChange={(e) => setEditingNote({
+                        ...editingNote,
+                        description: e.target.value
+                      })}
+                      className="edit-input"
+                      placeholder="Enter description"
+                    />
+                    <input
+                      type="text"
+                      value={editingNote.tag}
+                      onChange={(e) => setEditingNote({
+                        ...editingNote,
+                        tag: e.target.value
+                      })}
+                      className="edit-input"
+                      placeholder="Enter tag"
+                    />
+                    <div className="edit-actions">
+                      <button onClick={() => handleSave()} className="save-btn">
+                        Save
+                      </button>
+                      <button onClick={() => setEditingNote(null)} className="cancel-btn">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h3>{note.title}</h3>
+                    <p>{note.description}</p>
+                    <span className={`note-tag ${!note.tag?.trim() ? 'no-tag' : ''}`}>
+                      {note.tag?.trim() ? note.tag : '# Untagged'}
+                    </span>
+                    <div className="card-actions">
+                      <button 
+                        onClick={() => handleEdit(note)}
+                        className="action-btn edit-btn"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(note._id, 'note')}
+                        className="action-btn delete-btn"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))
           ) : (
             <div className="empty-state">
               <div className="empty-state-content">
