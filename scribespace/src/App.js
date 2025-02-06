@@ -5,7 +5,7 @@ import About from "./components/JS/About";
 import NoteState from "./context/notes/NoteState";
 import Alert from "./components/JS/Alert";
 import Login from "./components/JS/Login";
-import SignUp from "./components/JS/Signup";
+import Signup from "./components/JS/signup";
 import { useState } from "react";
 import PrivateRoute from "./components/JS/PrivateRoute";
 import TemporaryNote from "./components/JS/TemporaryNote";
@@ -54,7 +54,7 @@ function App() {
                   />
                   <Route path="/about" element={<About />} />
                   <Route path="/login" element={<Login showAlert={showAlert} />} />
-                  <Route path="/signup" element={<SignUp showAlert={showAlert} />} />
+                  <Route path="/signup" element={<Signup showAlert={showAlert} />} />
                   <Route path="/tempDraw" element={<TemporaryCanvas showAlert={showAlert} />} />
                   <Route path="/tempNote" element={<TemporaryNote showAlert={showAlert} />} />
                   <Route 
