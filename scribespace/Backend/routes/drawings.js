@@ -65,4 +65,34 @@ router.delete('/delete/:id', fetchUser, async (req, res) => {
   }
 });
 
+// Add this route to update drawing title
+router.put('/update/:id', fetchUser, async (req, res) => {
+  try {
+    const { title } = req.body;
+    
+    // Find the drawing and check if it exists
+    let drawing = await Drawing.findById(req.params.id);
+    if (!drawing) {
+      return res.status(404).send('Drawing not found');
+    }
+
+    // Verify user owns this drawing
+    if (drawing.user.toString() !== req.user.id) {
+      return res.status(401).send('Not authorized');
+    }
+
+    // Update the drawing title
+    drawing = await Drawing.findByIdAndUpdate(
+      req.params.id,
+      { title },
+      { new: true }
+    );
+
+    res.json(drawing);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 module.exports = router; 

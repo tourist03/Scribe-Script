@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Download, Trash2, Sparkles, Info } from 'lucide-react';
+import { Plus, Download, Trash2, Sparkles, Info, PenLine } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 import '../CSS/Drawings.css';
 import { EMPTY_DRAWING_SVG } from '../../constants/illustrations';
@@ -11,6 +11,8 @@ const Drawings = ({ showAlert }) => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [drawingToDelete, setDrawingToDelete] = useState(null);
+  const [editingTitle, setEditingTitle] = useState(null);
+  const [newTitle, setNewTitle] = useState('');
 
   // Fetch drawings
   useEffect(() => {
@@ -83,6 +85,40 @@ const Drawings = ({ showAlert }) => {
     document.body.removeChild(link);
   };
 
+  const handleEditTitle = async (drawingId, updatedTitle) => {
+    if (!updatedTitle.trim()) {
+      showAlert("Title cannot be empty", "error");
+      setEditingTitle(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5001/api/drawings/update/${drawingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ title: updatedTitle })
+      });
+
+      if (response.ok) {
+        setDrawings(drawings.map(drawing => 
+          drawing._id === drawingId 
+            ? { ...drawing, title: updatedTitle }
+            : drawing
+        ));
+        setEditingTitle(null);
+        showAlert("Title updated successfully", "success");
+      } else {
+        showAlert("Failed to update title", "error");
+      }
+    } catch (error) {
+      console.error('Error updating drawing title:', error);
+      showAlert("Error updating title", "error");
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading drawings...</div>;
   }
@@ -135,6 +171,44 @@ const Drawings = ({ showAlert }) => {
         <div className="drawings-grid">
           {drawings.map((drawing, index) => (
             <div key={drawing._id} className="drawing-card">
+              <div className="drawing-title-container">
+                {editingTitle === drawing._id ? (
+                  <div className="edit-title-form">
+                    <input
+                      type="text"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      onBlur={() => {
+                        if (newTitle.trim()) {
+                          handleEditTitle(drawing._id, newTitle);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && newTitle.trim()) {
+                          handleEditTitle(drawing._id, newTitle);
+                        } else if (e.key === 'Escape') {
+                          setEditingTitle(null);
+                        }
+                      }}
+                      autoFocus
+                      placeholder="Enter title"
+                    />
+                  </div>
+                ) : (
+                  <div className="drawing-title">
+                    <h3>{drawing.title || 'Untitled Drawing'}</h3>
+                    <button 
+                      className="edit-title-btn"
+                      onClick={() => {
+                        setEditingTitle(drawing._id);
+                        setNewTitle(drawing.title || '');
+                      }}
+                    >
+                      <PenLine size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
               <div className="drawing-preview">
                 <img src={drawing.drawingData} alt={`Drawing ${index + 1}`} />
               </div>
