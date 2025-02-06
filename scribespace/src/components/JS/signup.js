@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, User, GithubIcon } from 'lucide-react';
 import '../CSS/Auth.css';
+import noteContext from "../../context/notes/noteContext";
 
 const Signup = (props) => {
   const navigate = useNavigate();
+  const context = useContext(noteContext);
+  const { initializeNotes } = context;
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
@@ -17,14 +20,13 @@ const Signup = (props) => {
     e.preventDefault();
     setIsLoading(true);
     const host = "http://localhost:5001";
-    const { name, email, password, cpassword } = credentials;
 
-    if (password !== cpassword) {
+    if (credentials.password !== credentials.cpassword) {
       props.showAlert("Passwords do not match", "danger");
       setIsLoading(false);
       return;
     }
-    if (password.length < 5) {
+    if (credentials.password.length < 5) {
       props.showAlert("Password must be at least 5 characters", "danger");
       setIsLoading(false);
       return;
@@ -37,17 +39,19 @@ const Signup = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          email,
-          password,
+          name: credentials.name,
+          email: credentials.email,
+          password: credentials.password,
         }),
       });
 
       const json = await response.json();
       if (json.success) {
-        localStorage.setItem("token", json.authtoken);
-        props.showAlert("Account created successfully!", "success");
-        navigate("/");
+        props.showAlert(
+          "Account created successfully! Please login to continue.", 
+          "success"
+        );
+        navigate("/login");
       } else {
         props.showAlert(json.error || "Invalid Credentials", "danger");
       }

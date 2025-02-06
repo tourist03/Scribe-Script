@@ -15,9 +15,15 @@ const SavedWork = ({ showAlert }) => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [itemType, setItemType] = useState('');
 
+  const refreshContent = async () => {
+    await Promise.all([
+      fetchNotes(),
+      fetchDrawings()
+    ]);
+  };
+
   useEffect(() => {
-    fetchNotes();
-    fetchDrawings();
+    refreshContent();
   }, []);
 
   const fetchNotes = async () => {
@@ -112,11 +118,7 @@ const SavedWork = ({ showAlert }) => {
       });
 
       if (response.ok) {
-        setNotes(notes.map(note => 
-          note._id === editingNote.id 
-            ? { ...note, ...editingNote } 
-            : note
-        ));
+        await refreshContent();
         setEditingNote(null);
         showAlert("Note updated successfully", "success");
       }

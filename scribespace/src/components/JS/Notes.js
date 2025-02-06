@@ -50,10 +50,16 @@ const Notes = (props) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
 
+  const refreshNotes = async () => {
+    if (localStorage.getItem("token")) {
+      await getNotes();
+    }
+  };
+
   return (
     <div className="notes-flex-container">
       <div className="add-note-section">
-        <AddNote showAlert={props.showAlert} />
+        <AddNote showAlert={props.showAlert} onNoteAdded={refreshNotes} />
       </div>
 
       <div className="all-notes-section">

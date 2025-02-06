@@ -119,6 +119,43 @@ const Drawings = ({ showAlert }) => {
     }
   };
 
+  const refreshDrawings = async () => {
+    try {
+      const response = await fetch('http://localhost:5001/api/drawings/fetch', {
+        headers: {
+          'auth-token': localStorage.getItem('token')
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setDrawings(data);
+      }
+    } catch (error) {
+      console.error('Error fetching drawings:', error);
+    }
+  };
+
+  const handleSave = async (drawingData, title) => {
+    try {
+      const response = await fetch("http://localhost:5001/api/drawings/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ drawingData, title }),
+      });
+
+      if (response.ok) {
+        showAlert("Drawing saved successfully!", "success");
+        await refreshDrawings();  // Refresh after saving
+      }
+    } catch (error) {
+      console.error("Error saving drawing:", error);
+      showAlert("Error saving drawing", "error");
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading drawings...</div>;
   }

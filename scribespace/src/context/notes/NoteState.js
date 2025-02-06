@@ -1,45 +1,39 @@
 import NoteContext from "./noteContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NoteState = (props) => {
   const host = "http://localhost:5001";
-  const UserNotes = [];
+  const [notes, setNotes] = useState([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const [notes, setNotes] = useState(UserNotes);
-  //Get All Note
-  const getNotes = async () => {
-    const token = localStorage.getItem('token');
-    //console.log('Token:', token);
-
-    if (!token) {
-      //console.error('No token found');
-      return;
-    }
-
+  // Modify getNotes to be more robust
+  const getNotes = async (forceRefresh = false) => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
       const response = await fetch(`${host}/api/notes/fetchallnotes`, {
         method: "GET",
         headers: {
           "auth-token": token,
         },
+        cache: forceRefresh ? 'no-cache' : 'default'
       });
 
-      const json = await response.json();
-      //console.log('Response:', json);
-
-      if (Array.isArray(json)) {
-        setNotes(json);
-      } else {
-        setNotes([]);
-        //console.error('Received non-array data:', json);
+      if (response.ok) {
+        const json = await response.json();
+        if (Array.isArray(json)) {
+          setNotes(json);
+          setIsInitialized(true);
+        }
       }
     } catch (error) {
-      //console.error('Error fetching notes:', error);
+      console.error('Error fetching notes:', error);
       setNotes([]);
     }
   };
 
-  //Add Note
+  // Modify addNote to ensure immediate state update
   const addNote = async (title, description, tag) => {
     try {
       const response = await fetch(`${host}/api/notes/addnote`, {
@@ -50,20 +44,33 @@ const NoteState = (props) => {
         },
         body: JSON.stringify({ title, description, tag }),
       });
-
-      const note = await response.json();
       
-      // Check if the response is successful and contains a valid note
-      if (note && !note.error) {
-        // Use spread operator to safely add the new note
-        setNotes(prevNotes => [...prevNotes, note]);
-      } else {
-        //console.error('Failed to add note:', note);
+      if (response.ok) {
+        const newNote = await response.json();
+        setNotes(prevNotes => [...prevNotes, newNote]);
+        return true;
       }
+      return false;
     } catch (error) {
-      //console.error('Error adding note:', error);
+      console.error("Error adding note:", error);
+      return false;
     }
   };
+
+  // Add a proper initialization function
+  const initializeNotes = async () => {
+    if (!isInitialized) {
+      await getNotes(true);
+    }
+  };
+
+  // Watch for auth changes
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && !isInitialized) {
+      initializeNotes();
+    }
+  }, [isInitialized]);
 
   //Delete Note
   const deleteNote = async (_id) => {
@@ -116,7 +123,15 @@ const NoteState = (props) => {
 
   return (
     <NoteContext.Provider
-      value={{ notes, addNote, deleteNote, editNote, getNotes }}
+      value={{ 
+        notes, 
+        addNote, 
+        deleteNote, 
+        editNote, 
+        getNotes,
+        initializeNotes,
+        isInitialized 
+      }}
     >
       {props.children}
     </NoteContext.Provider>

@@ -2,17 +2,20 @@ import React, { useContext, useState } from "react";
 import noteContext from "../../context/notes/noteContext";
 import "../CSS/AddNote.css"; // Import the new CSS file
 
-const AddNote = ({ showAlert }) => {
+const AddNote = ({ showAlert, onNoteAdded }) => {
   const context = useContext(noteContext);
   const { addNote } = context;
 
   const [note, setNote] = useState({ title: "", description: "", tag: "" });
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    addNote(note.title, note.description, note.tag);
+    await addNote(note.title, note.description, note.tag);
     setNote({ title: "", description: "", tag: "" });
     showAlert("Note added successfully", "success");
+    if (onNoteAdded) {
+      await onNoteAdded();  // Refresh notes after adding
+    }
   };
 
   const onChange = (e) => {
