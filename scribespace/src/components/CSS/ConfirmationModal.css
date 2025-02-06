@@ -26,6 +26,58 @@
   animation: slideUp 0.3s ease-out;
 }
 
+.modal-content h3 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.modal-content p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-btn {
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  color: white;
+}
+
+.confirm-btn:hover {
+  background: linear-gradient(135deg, #9333ea, #f472b6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+}
+
 .modal-close {
   position: absolute;
   top: 1.5rem;
@@ -54,50 +106,6 @@
   font-size: 1.8rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-}
-
-.modal-content p {
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.modal-btn {
-  padding: 0.75rem 1.75rem;
-  border-radius: 12px;
-  border: none;
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.modal-btn.cancel {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-.modal-btn.cancel:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-1px);
-}
-
-.modal-btn.confirm {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
-  color: white;
-}
-
-.modal-btn.confirm:hover {
-  background: linear-gradient(135deg, #9333ea, #f472b6);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
 }
 
 .modal-auth-buttons {

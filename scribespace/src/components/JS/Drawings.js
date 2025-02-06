@@ -294,6 +294,10 @@ const Drawings = ({ showAlert }) => {
           setDrawingToDelete(null);
         }}
         onConfirm={confirmDelete}
+        title="Delete Drawing"
+        message="Are you sure you want to delete this drawing? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </div>
   );
