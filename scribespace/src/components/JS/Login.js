@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, GithubIcon } from 'lucide-react';
 import '../CSS/Auth.css';
+import { useAuth } from '../../context/AuthContext';
 
-const Login = (props) => {
+const Login = ({ showAlert }) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    
+    if (token) {
+      login(token);
+      window.history.replaceState({}, document.title, '/login');
+      showAlert("Successfully logged in!", "success");
+      navigate('/');
+    }
+  }, [login, navigate, showAlert]);
 
   const savePendingItems = async (token) => {
     // Check for pending drawing
@@ -27,7 +41,7 @@ const Login = (props) => {
 
         if (response.ok) {
           localStorage.removeItem('pendingTempDrawing');
-          props.showAlert("Drawing saved successfully!", "success");
+          showAlert("Drawing saved successfully!", "success");
           return '/drawings'; // Return the redirect path
         }
       } catch (error) {
@@ -55,7 +69,7 @@ const Login = (props) => {
 
         if (response.ok) {
           localStorage.removeItem('pendingTempNote');
-          props.showAlert("Note saved successfully!", "success");
+          showAlert("Note saved successfully!", "success");
           return '/notes'; // Return the redirect path
         }
       } catch (error) {
@@ -83,7 +97,7 @@ const Login = (props) => {
 
       if (json.success) {
         localStorage.setItem("token", json.authToken);
-        props.showAlert("Logged in successfully!", "success");
+        showAlert("Logged in successfully!", "success");
 
         // Handle pending temporary note
         const pendingNote = localStorage.getItem('pendingTempNote');
@@ -105,7 +119,7 @@ const Login = (props) => {
 
             if (noteResponse.ok) {
               localStorage.removeItem('pendingTempNote');
-              props.showAlert("Your note has been saved!", "success");
+              showAlert("Your note has been saved!", "success");
               navigate('/notes');
               return;
             }
@@ -133,7 +147,7 @@ const Login = (props) => {
 
             if (drawingResponse.ok) {
               localStorage.removeItem('pendingTempDrawing');
-              props.showAlert("Your drawing has been saved!", "success");
+              showAlert("Your drawing has been saved!", "success");
               navigate('/drawings');
               return;
             }
@@ -144,11 +158,11 @@ const Login = (props) => {
 
         navigate('/');
       } else {
-        props.showAlert(json.error || "Invalid credentials", "error");
+        showAlert(json.error || "Invalid credentials", "error");
       }
     } catch (error) {
       console.error('Login error:', error);
-      props.showAlert("An error occurred during login", "error");
+      showAlert("An error occurred during login", "error");
     } finally {
       setIsLoading(false);
     }

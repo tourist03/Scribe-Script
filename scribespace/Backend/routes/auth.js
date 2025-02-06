@@ -190,6 +190,23 @@ router.get('/google/callback',
   }
 );
 
-// Similar callback routes for GitHub and Microsoft...
+// GitHub callback route
+router.get('/github/callback', 
+  passport.authenticate('github', { 
+    failureRedirect: 'http://localhost:3000/login',
+    session: false 
+  }),
+  function(req, res) {
+    try {
+      const token = jwt.sign({ user: { id: req.user.id } }, JWT_SECRET);
+      res.redirect(`http://localhost:3000/login?token=${token}`);
+    } catch (error) {
+      console.error('Token generation error:', error);
+      res.redirect('http://localhost:3000/login');
+    }
+  }
+);
+
+// Similar callback routes for Microsoft...
 
 module.exports = router;

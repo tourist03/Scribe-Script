@@ -13,7 +13,10 @@ const port = 5001;
 
 //if we want to use the req.body then have to use the middleware -> express.json(), and to use middleware we use the "app.use" , now can deal with the json, can make request in json by sending content-type application/json
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -24,9 +27,22 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// Initialize Passport and restore authentication state from session
+// Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Add root route handler
+app.get('/', (req, res) => {
+  res.json({
+    message: "Welcome to ScribeSpace API",
+    status: "Server is running",
+    endpoints: {
+      auth: "/api/auth",
+      notes: "/api/notes",
+      drawings: "/api/drawings"
+    }
+  });
+});
 
 //Available Routes
 

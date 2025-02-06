@@ -1,9 +1,13 @@
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
-const MicrosoftStrategy = require('passport-microsoft').Strategy;
 const User = require('../models/User');
-const oauthConfig = require('./oauth');
+const crypto = require('crypto');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
+// Add these debug logs to check if env variables are loaded
+console.log('GitHub Client ID:', process.env.GITHUB_CLIENT_ID);
+console.log('GitHub Callback URL:', process.env.GITHUB_CALLBACK_URL);
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -18,85 +22,39 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Google Strategy
-passport.use(new GoogleStrategy({
-    clientID: oauthConfig.google.clientID,
-    clientSecret: oauthConfig.google.clientSecret,
-    callbackURL: oauthConfig.google.callbackURL
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      // Check if user already exists
-      let user = await User.findOne({ email: profile.emails[0].value });
-      
-      if (user) {
-        return done(null, user);
-      }
-
-      // If not, create new user
-      user = new User({
-        name: profile.displayName,
-        email: profile.emails[0].value,
-        password: crypto.randomBytes(16).toString('hex'), // Generate random password
-        authProvider: 'google'
-      });
-
-      await user.save();
-      return done(null, user);
-    } catch (error) {
-      return done(error, null);
-    }
-  }
-));
-
 // GitHub Strategy
 passport.use(new GitHubStrategy({
-    clientID: oauthConfig.github.clientID,
-    clientSecret: oauthConfig.github.clientSecret,
-    callbackURL: oauthConfig.github.callbackURL
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.GITHUB_CALLBACK_URL
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      let user = await User.findOne({ email: profile.emails[0].value });
-      
-      if (user) {
-        return done(null, user);
-      }
-
-      user = new User({
-        name: profile.displayName,
-        email: profile.emails[0].value,
-        password: crypto.randomBytes(16).toString('hex'),
-        authProvider: 'github'
+      // Handle case where email might not be available
+      const email = profile.emails && profile.emails[0] ? profile.emails[0].value : `${profile.username}@github.com`;
+      let user = await User.findOne({ 
+        $or: [
+          { email: email },
+          { githubId: profile.id }
+        ]
       });
-
-      await user.save();
-      return done(null, user);
-    } catch (error) {
-      return done(error, null);
-    }
-  }
-));
-
-// Microsoft Strategy
-passport.use(new MicrosoftStrategy({
-    clientID: oauthConfig.microsoft.clientID,
-    clientSecret: oauthConfig.microsoft.clientSecret,
-    callbackURL: oauthConfig.microsoft.callbackURL
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      let user = await User.findOne({ email: profile.emails[0].value });
       
       if (user) {
+        // Update user if needed
+        if (!user.githubId) {
+          user.githubId = profile.id;
+          await user.save();
+        }
         return done(null, user);
       }
 
+      // Create new user
       user = new User({
-        name: profile.displayName,
-        email: profile.emails[0].value,
+        name: profile.displayName || profile.username,
+        email: email,
         password: crypto.randomBytes(16).toString('hex'),
-        authProvider: 'microsoft'
+        authProvider: 'github',
+        githubId: profile.id
       });
 
       await user.save();

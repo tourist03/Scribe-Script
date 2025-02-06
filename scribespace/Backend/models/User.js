@@ -19,6 +19,11 @@ const UserSchema = new Schema({
     enum: ['local', 'google', 'github', 'microsoft'],
     default: 'local'
   },
+  githubId: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   date: {
