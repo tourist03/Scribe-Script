@@ -1,49 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FileText, PenLine, Lock, Users, Save } from "lucide-react";
+import { FileText, PenLine, Lock, Cloud, LogIn, Sparkles, Save } from "lucide-react";
 import "../CSS/About.css";
+import { useAuth } from "../../context/AuthContext";
 
 const About = () => {
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("token");
-
-  const features = [
-    {
-      icon: <FileText className="feature-icon text-blue-500" />,
-      title: "Text Notes",
-      description:
-        "Create and organize your thoughts with rich text formatting. Access your notes anytime, anywhere with cloud storage.",
-    },
-    {
-      icon: <PenLine className="feature-icon text-purple-500" />,
-      title: "Drawing Canvas",
-      description:
-        "Express your creativity with our digital canvas. Create, save, and share your artwork seamlessly.",
-      comingSoon: true,
-    },
-    {
-      icon: <Lock className="feature-icon text-green-500" />,
-      title: "Secure Storage",
-      description:
-        "Your data is protected with industry-standard security. Rest easy knowing your work is safe and private.",
-    },
-    {
-      icon: <Users className="feature-icon text-orange-500" />,
-      title: "User Accounts",
-      description:
-        "Personalized accounts for syncing your work across devices. Access your content from anywhere, anytime.",
-    },
-  ];
-
-  const handleGetStarted = () => navigate("/login");
-  const handleCreateTemporaryNote = () => navigate("/tempNote");
-  const handleCreateTemporaryDrawing = () => navigate("/tempDraw");
-  const handleAddNoteButtonClick = () => navigate("/notes");
-  const handleTitleClick = () => navigate('/');
+  const { isAuthenticated } = useAuth();
 
   return (
-    <div className={isLoggedIn ? "logged-in-container" : "about-container"}>
-      {isLoggedIn ? (
+    <div className="about-container">
+      {isAuthenticated ? (
         <>
           <div className="welcome-header">
             <h1>Create. Express. Inspire.</h1>
@@ -86,79 +53,71 @@ const About = () => {
           </div>
         </>
       ) : (
-        <>
+        <div className="guest-container">
           <div className="hero-section">
-            <h1 className="hero-title" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
-              Scribescape
-            </h1>
-            <p className="hero-subtitle">
-              Your creative digital canvas for notes and drawings
-            </p>
+            <h1>Create. Express. Inspire.</h1>
+            <p>Your digital canvas for limitless creativity</p>
           </div>
 
-          <div className="features-section">
-            <h2 className="features-title">Why Choose Scribescape?</h2>
-            <div className="features-grid">
-              {features.map((feature) => (
-                <div className="feature-card" key={feature.title}>
-                  <div className="feature-icon-wrapper">{feature.icon}</div>
-                  <div className="feature-content">
-                    <h3 className="feature-title">
-                      {feature.title}
-                      {feature.comingSoon && (
-                        <span className="beta-badge">BETA</span>
-                      )}
-                    </h3>
-                    <p className="feature-description">{feature.description}</p>
-                  </div>
+          <div className="main-features">
+            <div className="feature-card" onClick={() => navigate('/tempNote')}>
+              <div className="card-header">
+                <div className="icon-wrapper blue">
+                  <FileText size={24} />
                 </div>
-              ))}
+                <h3>Take Notes</h3>
+              </div>
+              <p>Transform your thoughts into organized masterpieces. Smart features, beautiful organization, unlimited potential.</p>
+            </div>
+
+            <div className="feature-card" onClick={() => navigate('/tempDraw')}>
+              <div className="card-header">
+                <div className="icon-wrapper purple">
+                  <PenLine size={24} />
+                </div>
+                <h3>Draw & Sketch</h3>
+                <span className="beta-badge">BETA</span>
+              </div>
+              <p>Unleash your artistic vision with powerful digital tools. From quick sketches to elaborate artwork.</p>
+            </div>
+          </div>
+
+          <div className="secondary-features">
+            <div className="mini-card">
+              <Cloud size={24} />
+              <h3>Smart Sync</h3>
+              <p>Access your work anywhere</p>
+            </div>
+
+            <div className="mini-card">
+              <Sparkles size={24} />
+              <h3>Easy to Use</h3>
+              <p>Intuitive interface</p>
+            </div>
+
+            <div className="mini-card">
+              <Lock size={24} />
+              <h3>Secure Storage</h3>
+              <p>Your work is protected</p>
             </div>
           </div>
 
           <div className="cta-section">
-            {!isLoggedIn ? (
-              <>
-                <div className="temp-actions">
-                  <button
-                    onClick={handleCreateTemporaryNote}
-                    className="action-button note-button"
-                  >
-                    <FileText size={20} />
-                    Create Temporary Note
-                  </button>
-                  <button
-                    onClick={handleCreateTemporaryDrawing}
-                    className="action-button draw-button"
-                  >
-                    <PenLine size={20} />
-                    Create Temporary Drawing
-                  </button>
-                </div>
-                <button onClick={handleGetStarted} className="get-started-button">
-                  Get Started (Login Required)
-                </button>
-              </>
-            ) : (
-              <div className="logged-in-actions">
-                <button
-                  onClick={handleAddNoteButtonClick}
-                  className="action-button note-button"
-                >
-                  <FileText size={20} />
-                  Add New Note
-                </button>
-                <button
-                  onClick={() => navigate('/drawing')}
-                  className="action-button draw-button"
-                >
-                  <PenLine size={20} />
-                  Create Drawing
-                </button>
-              </div>
-            )}
+            <button 
+              className="cta-button primary"
+              onClick={() => navigate('/signup')}
+            >
+              Get Started
+            </button>
+            <button 
+              className="cta-button secondary"
+              onClick={() => navigate('/login')}
+            >
+              <LogIn size={20} />
+              Sign In
+            </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
