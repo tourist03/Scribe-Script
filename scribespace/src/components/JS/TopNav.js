@@ -8,6 +8,14 @@ const TopNav = () => {
   const location = useLocation();
   const isLoggedIn = !!localStorage.getItem('token');
 
+  const handleLogoClick = () => {
+    if (isLoggedIn) {
+      navigate('/about');
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -16,7 +24,7 @@ const TopNav = () => {
   return (
     <nav className="top-nav">
       <div className="nav-left">
-        <h1 onClick={() => navigate('/')}>ScribeSpace</h1>
+        <h1 onClick={handleLogoClick}>ScribeSpace</h1>
       </div>
       
       <div className="nav-center">

@@ -156,7 +156,8 @@ const Login = ({ showAlert }) => {
           }
         }
 
-        navigate('/');
+        navigate('/about');
+        //navigate('/');
       } else {
         showAlert(json.error || "Invalid credentials", "error");
       }

@@ -40,7 +40,7 @@ const About = () => {
               </div>
             </div>
 
-            <div className="action-block saved" onClick={() => navigate('/saved')}>
+            <div className="action-block saved" onClick={() => navigate('/saved-work')}>
               <div className="block-icon">
                 <Save size={40} />
               </div>
