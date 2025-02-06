@@ -45,14 +45,12 @@ const Drawings = ({ showAlert }) => {
 
   const confirmDelete = async () => {
     try {
-      console.log('Attempting to delete drawing:', drawingToDelete);
-      
       const response = await fetch(`http://localhost:5001/api/drawings/delete/${drawingToDelete}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': localStorage.getItem('token'),
-        },
+          'auth-token': localStorage.getItem('token')
+        }
       });
 
       const data = await response.json();
@@ -68,8 +66,7 @@ const Drawings = ({ showAlert }) => {
         showAlert(data.message || 'Failed to delete drawing', 'error');
       }
     } catch (error) {
-      console.error('Error deleting drawing:', error);
-      showAlert('Error deleting drawing', 'error');
+      showAlert('Error deleting item', 'error');
     } finally {
       setModalOpen(false);
       setDrawingToDelete(null);
@@ -114,7 +111,6 @@ const Drawings = ({ showAlert }) => {
         showAlert("Failed to update title", "error");
       }
     } catch (error) {
-      console.error('Error updating drawing title:', error);
       showAlert("Error updating title", "error");
     }
   };
@@ -131,7 +127,7 @@ const Drawings = ({ showAlert }) => {
         setDrawings(data);
       }
     } catch (error) {
-      console.error('Error fetching drawings:', error);
+      // Removed: console.error('Error fetching drawings:', error);
     }
   };
 

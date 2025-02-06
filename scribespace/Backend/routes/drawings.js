@@ -10,7 +10,6 @@ router.get('/fetch', fetchUser, async (req, res) => {
     const drawings = await Drawing.find({ user: req.user.id });
     res.json(drawings);
   } catch (error) {
-    console.error(error.message);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -39,7 +38,6 @@ router.post('/add', fetchUser, [
     res.json(savedDrawing);
 
   } catch (error) {
-    console.error(error.message);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -60,7 +58,6 @@ router.delete('/delete/:id', fetchUser, async (req, res) => {
     drawing = await Drawing.findByIdAndDelete(req.params.id);
     res.json({ success: 'Drawing deleted successfully' });
   } catch (error) {
-    console.error(error.message);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -90,7 +87,6 @@ router.put('/update/:id', fetchUser, async (req, res) => {
 
     res.json(drawing);
   } catch (error) {
-    console.error(error.message);
     res.status(500).send('Internal Server Error');
   }
 });

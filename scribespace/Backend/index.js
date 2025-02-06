@@ -51,6 +51,4 @@ app.use("/api/notes", require("./routes/notes"));
 app.use("/api/drawings", drawingsRouter);
 app.use('/api/auth', require('./routes/socialAuth'));
 
-app.listen(port, () => {
-  console.log(`ScribeSpace-Backend listening at http://localhost:${port}`);
-});
+app.listen(port);

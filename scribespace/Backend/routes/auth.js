@@ -58,7 +58,6 @@ router.post(
       success = true;
       res.json({ success , authToken });
     } catch (error) {
-      console.error(error.message);
       res.status(500).send(success , "Internal server Error Occured");
     }
   }
@@ -73,39 +72,28 @@ router.post(
     body("password", "Password cannot be blank").exists(),
   ],
   async (req, res) => {
-    let success = false
-    // if there are errors then return bad request
+    let success = false;
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({ error: error.array() });
     }
-
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        return res
-          .status(400)
-          .json({success ,  error: "Login with correct credentials" });
+        return res.status(400).json({ success, error: "Login with correct credentials" });
       }
-
       const passwordcompare = await bcrypt.compare(password, user.password);
       if (!passwordcompare) {
-        return res
-          .status(400)
-          .json({success ,  error: "Login with correct credentials" });
+        return res.status(400).json({ success, error: "Login with correct credentials" });
       }
-
       const data = {
-        user: {
-          id: user.id,
-        },
+        user: { id: user.id },
       };
       const authToken = jwt.sign(data, JWT_SECRET);
       success = true;
-      res.json({success,  authToken });
+      res.json({ success, authToken });
     } catch (error) {
-      console.error(error.message);
       res.status(500).send("Internal server Error Occured");
     }
   }
@@ -119,7 +107,6 @@ router.post("/getuser", fetchUser, async (req, res) => {
     const user = await User.findById(userId);
     res.send(user);
   } catch (error) {
-    console.error(error.message);
     res.status(500).send("Internal server Error Occured");
   }
 });
@@ -163,7 +150,6 @@ router.post('/forgot-password', async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.json({ success: true, message: 'Reset email sent' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ success: false, error: "Server error" });
   }
 });
@@ -201,7 +187,6 @@ router.get('/github/callback',
       const token = jwt.sign({ user: { id: req.user.id } }, JWT_SECRET);
       res.redirect(`http://localhost:3000/login?token=${token}`);
     } catch (error) {
-      console.error('Token generation error:', error);
       res.redirect('http://localhost:3000/login');
     }
   }

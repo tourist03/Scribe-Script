@@ -80,10 +80,8 @@ const DrawingCanvas = ({ showAlert }) => {
       showAlert("Please add a title for your drawing", "error");
       return;
     }
-
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
-
     try {
       const response = await fetch("http://localhost:5001/api/drawings/add", {
         method: "POST",
@@ -96,7 +94,6 @@ const DrawingCanvas = ({ showAlert }) => {
           drawingData,
         }),
       });
-
       if (response.ok) {
         showAlert("Drawing saved successfully!", "success");
         navigate("/drawings");
@@ -104,7 +101,6 @@ const DrawingCanvas = ({ showAlert }) => {
         showAlert("Failed to save drawing", "error");
       }
     } catch (error) {
-      console.error("Error saving drawing:", error);
       showAlert("Error saving drawing", "error");
     }
   };

@@ -157,12 +157,10 @@ const Login = ({ showAlert }) => {
         }
 
         navigate('/about');
-        //navigate('/');
       } else {
         showAlert(json.error || "Invalid credentials", "error");
       }
     } catch (error) {
-      console.error('Login error:', error);
       showAlert("An error occurred during login", "error");
     } finally {
       setIsLoading(false);

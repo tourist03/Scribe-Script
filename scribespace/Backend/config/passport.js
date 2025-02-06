@@ -5,10 +5,6 @@ const crypto = require('crypto');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-// Add these debug logs to check if env variables are loaded
-console.log('GitHub Client ID:', process.env.GITHUB_CLIENT_ID);
-console.log('GitHub Callback URL:', process.env.GITHUB_CALLBACK_URL);
-
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -24,43 +20,27 @@ passport.deserializeUser(async (id, done) => {
 
 // GitHub Strategy
 passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
+    clientID: process.env.GITHUB_CLIENT_ID || 'Ov23libEbgVK5MxALViT',
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.GITHUB_CALLBACK_URL
+    callbackURL: process.env.GITHUB_CALLBACK_URL || "http://localhost:5001/api/auth/github/callback"
   },
-  async (accessToken, refreshToken, profile, done) => {
+  async function(accessToken, refreshToken, profile, done) {
     try {
-      // Handle case where email might not be available
-      const email = profile.emails && profile.emails[0] ? profile.emails[0].value : `${profile.username}@github.com`;
-      let user = await User.findOne({ 
-        $or: [
-          { email: email },
-          { githubId: profile.id }
-        ]
-      });
+      let user = await User.findOne({ githubId: profile.id });
       
-      if (user) {
-        // Update user if needed
-        if (!user.githubId) {
-          user.githubId = profile.id;
-          await user.save();
-        }
-        return done(null, user);
+      if (!user) {
+        user = await User.create({
+          name: profile.displayName || profile.username,
+          email: profile.emails?.[0]?.value || `${profile.username}@github.com`,
+          password: crypto.randomBytes(16).toString('hex'),
+          githubId: profile.id,
+          authProvider: 'github'
+        });
       }
-
-      // Create new user
-      user = new User({
-        name: profile.displayName || profile.username,
-        email: email,
-        password: crypto.randomBytes(16).toString('hex'),
-        authProvider: 'github',
-        githubId: profile.id
-      });
-
-      await user.save();
+      
       return done(null, user);
-    } catch (error) {
-      return done(error, null);
+    } catch (err) {
+      return done(err, null);
     }
   }
 ));
