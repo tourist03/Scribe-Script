@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, X, ArrowLeft, FileText, Palette, Trash2, Download } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
+import config from '../../config/config';
 
 const TemporaryCanvas = ({ showAlert }) => {
   const canvasRef = useRef(null);
@@ -189,7 +190,7 @@ const TemporaryCanvas = ({ showAlert }) => {
         return;
       }
 
-      const response = await fetch('http://localhost:5001/api/drawings/add', {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

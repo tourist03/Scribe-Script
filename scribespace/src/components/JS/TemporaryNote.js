@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 import '../CSS/TemporaryNote.css';
+import config from '../../config/config';
 
 const TemporaryNote = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ const TemporaryNote = ({ showAlert }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/api/notes/addnote", {
+      const response = await fetch(`${config.BACKEND_URL}/api/notes/addnote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, GithubIcon } from 'lucide-react';
 import '../CSS/Auth.css';
 import { useAuth } from '../../context/AuthContext';
+import config from '../../config/config';
 
 const Login = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Login = ({ showAlert }) => {
     const pendingDrawing = localStorage.getItem('pendingTempDrawing');
     if (pendingDrawing) {
       try {
-        const response = await fetch('http://localhost:5001/api/drawings/add', {
+        const response = await fetch(`${config.BACKEND_URL}/api/drawings/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ const Login = ({ showAlert }) => {
     if (pendingNote) {
       try {
         const noteData = JSON.parse(pendingNote);
-        const response = await fetch('http://localhost:5001/api/notes/addnote', {
+        const response = await fetch(`${config.BACKEND_URL}/api/notes/addnote`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ const Login = ({ showAlert }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5001/api/auth/login", {
+      const response = await fetch(`${config.BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +105,7 @@ const Login = ({ showAlert }) => {
         if (pendingNote) {
           try {
             const { title, content } = JSON.parse(pendingNote);
-            const noteResponse = await fetch("http://localhost:5001/api/notes/addnote", {
+            const noteResponse = await fetch(`${config.BACKEND_URL}/api/notes/addnote`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -133,7 +134,7 @@ const Login = ({ showAlert }) => {
         if (pendingDrawing) {
           try {
             const { drawingData, title } = JSON.parse(pendingDrawing);
-            const drawingResponse = await fetch("http://localhost:5001/api/drawings/add", {
+            const drawingResponse = await fetch(`${config.BACKEND_URL}/api/drawings/add`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -218,7 +219,7 @@ const Login = ({ showAlert }) => {
 
           <button 
             type="button"
-            onClick={() => window.location.href='http://localhost:5001/api/auth/github'} 
+            onClick={() => window.location.href=`${config.BACKEND_URL}/api/auth/github`} 
             className="social-button"
           >
             <GithubIcon size={20} />

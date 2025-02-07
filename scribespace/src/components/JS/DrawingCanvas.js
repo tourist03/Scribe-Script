@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Save, X, FileText } from "lucide-react";
 import "../CSS/DrawingCanvas.css";
 import PropTypes from 'prop-types';
+import config from '../../config/config';
 
 const DrawingCanvas = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ const DrawingCanvas = ({ showAlert }) => {
     const canvas = canvasRef.current;
     const drawingData = canvas.toDataURL();
     try {
-      const response = await fetch("http://localhost:5001/api/drawings/add", {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

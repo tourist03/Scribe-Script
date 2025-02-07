@@ -4,6 +4,7 @@ import ConfirmationModal from './ConfirmationModal';
 import '../CSS/SavedWork.css';
 import { Download, Edit, Trash2 } from 'lucide-react';
 import { EMPTY_DRAWING_SVG, EMPTY_NOTES_SVG } from '../../constants/illustrations';
+import config from '../../config/config';
 
 const SavedWork = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const SavedWork = ({ showAlert }) => {
 
   const fetchNotes = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/notes/fetchallnotes', {
+      const response = await fetch(`${config.BACKEND_URL}/api/notes/fetchallnotes`, {
         headers: {
           'auth-token': localStorage.getItem('token')
         }
@@ -44,7 +45,7 @@ const SavedWork = ({ showAlert }) => {
 
   const fetchDrawings = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/drawings/fetch', {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/fetch`, {
         headers: {
           'auth-token': localStorage.getItem('token')
         }
@@ -66,8 +67,8 @@ const SavedWork = ({ showAlert }) => {
 
   const confirmDelete = async () => {
     const endpoint = itemType === 'drawing' 
-      ? `http://localhost:5001/api/drawings/delete/${itemToDelete}`
-      : `http://localhost:5001/api/notes/deletenote/${itemToDelete}`;
+      ? `${config.BACKEND_URL}/api/drawings/delete/${itemToDelete}`
+      : `${config.BACKEND_URL}/api/notes/deletenote/${itemToDelete}`;
 
     try {
       const response = await fetch(endpoint, {
@@ -104,7 +105,7 @@ const SavedWork = ({ showAlert }) => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/notes/updatenote/${editingNote.id}`, {
+      const response = await fetch(`${config.BACKEND_URL}/api/notes/updatenote/${editingNote.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

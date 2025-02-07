@@ -4,6 +4,7 @@ import { Plus, Download, Trash2, Sparkles, Info, PenLine } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 import '../CSS/Drawings.css';
 import { EMPTY_DRAWING_SVG } from '../../constants/illustrations';
+import config from '../../config/config';
 
 const Drawings = ({ showAlert }) => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Drawings = ({ showAlert }) => {
 
   const fetchDrawings = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/drawings/fetch', {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/fetch`, {
         headers: {
           'auth-token': localStorage.getItem('token'),
         },
@@ -45,7 +46,7 @@ const Drawings = ({ showAlert }) => {
 
   const confirmDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/drawings/delete/${drawingToDelete}`, {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/delete/${drawingToDelete}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -66,6 +67,7 @@ const Drawings = ({ showAlert }) => {
         showAlert(data.message || 'Failed to delete drawing', 'error');
       }
     } catch (error) {
+      console.error('Error deleting drawing:', error);
       showAlert('Error deleting item', 'error');
     } finally {
       setModalOpen(false);
@@ -90,7 +92,7 @@ const Drawings = ({ showAlert }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/drawings/update/${drawingId}`, {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/update/${drawingId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -111,13 +113,14 @@ const Drawings = ({ showAlert }) => {
         showAlert("Failed to update title", "error");
       }
     } catch (error) {
+      console.error('Error updating drawing title:', error);
       showAlert("Error updating title", "error");
     }
   };
 
   const refreshDrawings = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/drawings/fetch', {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/fetch`, {
         headers: {
           'auth-token': localStorage.getItem('token')
         }
@@ -127,13 +130,13 @@ const Drawings = ({ showAlert }) => {
         setDrawings(data);
       }
     } catch (error) {
-      // Removed: console.error('Error fetching drawings:', error);
+      console.error('Error refreshing drawings:', error);
     }
   };
 
   const handleSave = async (drawingData, title) => {
     try {
-      const response = await fetch("http://localhost:5001/api/drawings/add", {
+      const response = await fetch(`${config.BACKEND_URL}/api/drawings/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +150,7 @@ const Drawings = ({ showAlert }) => {
         await refreshDrawings();  // Refresh after saving
       }
     } catch (error) {
-      console.error("Error saving drawing:", error);
+      console.error('Error saving drawing:', error);
       showAlert("Error saving drawing", "error");
     }
   };

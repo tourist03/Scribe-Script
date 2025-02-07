@@ -1,8 +1,9 @@
 import NoteContext from "./noteContext";
 import { useState, useEffect } from "react";
+import config from '../../config/config';
 
 const NoteState = (props) => {
-  const host = "http://localhost:5001";
+  const host = config.BACKEND_URL;
   const [notes, setNotes] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
 

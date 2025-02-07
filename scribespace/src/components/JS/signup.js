@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, User, GithubIcon } from 'lucide-react';
 import '../CSS/Auth.css';
 import noteContext from "../../context/notes/noteContext";
+import config from '../../config/config';
 
 const Signup = (props) => {
   const navigate = useNavigate();
@@ -19,7 +20,6 @@ const Signup = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const host = "http://localhost:5001";
 
     if (credentials.password !== credentials.cpassword) {
       props.showAlert("Passwords do not match", "danger");
@@ -33,7 +33,7 @@ const Signup = (props) => {
     }
 
     try {
-      const response = await fetch(`${host}/api/auth/createuser`, {
+      const response = await fetch(`${config.BACKEND_URL}/api/auth/createuser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const Signup = (props) => {
 
           <button 
             type="button"
-            onClick={() => window.location.href='http://localhost:5001/api/auth/github'} 
+            onClick={() => window.location.href=`${config.BACKEND_URL}/api/auth/github`} 
             className="social-button"
           >
             <GithubIcon size={20} />
