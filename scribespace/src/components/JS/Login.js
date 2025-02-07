@@ -33,14 +33,17 @@ const Login = ({ showAlert }) => {
         }
       }
       
-      login(token, userData);
-      window.history.replaceState({}, document.title, '/login');
-      showAlert("Successfully logged in!", "success");
-      
-      // Handle any pending items before redirecting
-      savePendingItems(token).then(redirectPath => {
-        navigate(redirectPath || '/about');
-      });
+      (async () => {
+        try {
+          await login(token, userData);
+          window.history.replaceState({}, document.title, '/login');
+          showAlert("Successfully logged in!", "success");
+          navigate('/about');
+        } catch (error) {
+          console.error('Login error:', error);
+          showAlert("Login failed. Please try again.", "error");
+        }
+      })();
     }
   }, [login, navigate, showAlert]);
 
@@ -115,15 +118,18 @@ const Login = ({ showAlert }) => {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        login(data.authtoken, data.user);
-        navigate('/');
+      if (response.ok && data.success) {
+        await login(data.authToken);
+        showAlert("Successfully logged in!", "success");
+        navigate('/about');
       } else {
         setError(data.error || 'Login failed');
+        showAlert(data.error || "Login failed", "error");
       }
     } catch (error) {
       console.error('Login error:', error);
       setError('An error occurred during login');
+      showAlert("An error occurred during login", "error");
     } finally {
       setIsLoading(false);
     }

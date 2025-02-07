@@ -12,10 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
   const checkAuthStatus = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -25,20 +21,20 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const response = await fetch(`${config.BACKEND_URL}/api/auth/verify`, {
-        method: 'GET',
+      const response = await fetch(`${config.BACKEND_URL}/api/auth/getuser`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'auth-token': token
-        },
-        credentials: 'include'
+        }
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
+        const userData = await response.json();
+        setUser(userData);
         setIsAuthenticated(true);
       } else {
+        console.error('Token verification failed');
         localStorage.removeItem('token');
         setUser(null);
         setIsAuthenticated(false);
@@ -53,13 +49,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = (token, userData) => {
-    localStorage.setItem('token', token);
-    if (userData) {
-      setUser(userData);
+  // Check auth status on mount and token change
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const login = async (token, userData = null) => {
+    try {
+      localStorage.setItem('token', token);
+      if (userData) {
+        setUser(userData);
+      }
+      setIsAuthenticated(true);
+      await checkAuthStatus(); // Verify the token immediately
+    } catch (error) {
+      console.error('Login error:', error);
+      logout();
     }
-    setIsAuthenticated(true);
-    checkAuthStatus(); // Verify the token immediately after login
   };
 
   const logout = () => {
