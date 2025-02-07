@@ -22,7 +22,7 @@ passport.deserializeUser(async (id, done) => {
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID || 'Ov23libEbgVK5MxALViT',
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.GITHUB_CALLBACK_URL || "http://localhost:5001/api/auth/github/callback"
+    callbackURL: "https://scribespace-backend.onrender.com/api/auth/github/callback"
   },
   async function(accessToken, refreshToken, profile, done) {
     try {

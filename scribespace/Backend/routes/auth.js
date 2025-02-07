@@ -179,15 +179,15 @@ router.get('/google/callback',
 // GitHub callback route
 router.get('/github/callback', 
   passport.authenticate('github', { 
-    failureRedirect: 'http://localhost:3000/login',
+    failureRedirect: 'https://scribe-script.vercel.app/login',
     session: false 
   }),
   function(req, res) {
     try {
       const token = jwt.sign({ user: { id: req.user.id } }, JWT_SECRET);
-      res.redirect(`http://localhost:3000/login?token=${token}`);
+      res.redirect(`https://scribe-script.vercel.app/login?token=${token}`);
     } catch (error) {
-      res.redirect('http://localhost:3000/login');
+      res.redirect('https://scribe-script.vercel.app/login');
     }
   }
 );

@@ -10,6 +10,7 @@ const Login = ({ showAlert }) => {
   const { login } = useAuth();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -84,85 +85,25 @@ const Login = ({ showAlert }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       const response = await fetch(`${config.BACKEND_URL}/api/auth/login`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: credentials.email, password: credentials.password }),
       });
 
-      const json = await response.json();
-
-      if (json.success) {
-        localStorage.setItem("token", json.authToken);
-        showAlert("Logged in successfully!", "success");
-
-        // Handle pending temporary note
-        const pendingNote = localStorage.getItem('pendingTempNote');
-        if (pendingNote) {
-          try {
-            const { title, content } = JSON.parse(pendingNote);
-            const noteResponse = await fetch(`${config.BACKEND_URL}/api/notes/addnote`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "auth-token": json.authToken,
-              },
-              body: JSON.stringify({ 
-                title: title,
-                description: content,
-                tag: "General"
-              }),
-            });
-
-            if (noteResponse.ok) {
-              localStorage.removeItem('pendingTempNote');
-              showAlert("Your note has been saved!", "success");
-              navigate('/notes');
-              return;
-            }
-          } catch (error) {
-            console.error('Error saving pending note:', error);
-          }
-        }
-
-        // Handle pending temporary drawing
-        const pendingDrawing = localStorage.getItem('pendingTempDrawing');
-        if (pendingDrawing) {
-          try {
-            const { drawingData, title } = JSON.parse(pendingDrawing);
-            const drawingResponse = await fetch(`${config.BACKEND_URL}/api/drawings/add`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "auth-token": json.authToken,
-              },
-              body: JSON.stringify({
-                drawingData,
-                title: title || `Drawing ${new Date().toLocaleDateString()}`
-              }),
-            });
-
-            if (drawingResponse.ok) {
-              localStorage.removeItem('pendingTempDrawing');
-              showAlert("Your drawing has been saved!", "success");
-              navigate('/drawings');
-              return;
-            }
-          } catch (error) {
-            console.error('Error saving pending drawing:', error);
-          }
-        }
-
-        navigate('/about');
+      const data = await response.json();
+      if (response.ok) {
+        login(data.authtoken, data.user);
+        navigate('/');
       } else {
-        showAlert(json.error || "Invalid credentials", "error");
+        setError(data.error || 'Login failed');
       }
     } catch (error) {
-      showAlert("An error occurred during login", "error");
+      console.error('Login error:', error);
+      setError('An error occurred during login');
     } finally {
       setIsLoading(false);
     }
