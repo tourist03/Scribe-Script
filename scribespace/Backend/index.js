@@ -14,8 +14,10 @@ const port = process.env.PORT || 5001;  // Changed from 5001 to use environment 
 //if we want to use the req.body then have to use the middleware -> express.json(), and to use middleware we use the "app.use" , now can deal with the json, can make request in json by sending content-type application/json
 
 app.use(cors({
-  origin: ['http://localhost:3000'],  // We'll add the frontend URL later
-  credentials: true
+  origin: ['http://localhost:3000', 'https://scribe-script.vercel.app'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'auth-token', 'Authorization']
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
