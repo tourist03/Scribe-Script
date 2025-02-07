@@ -9,7 +9,7 @@ const drawingsRouter = require('./routes/drawings');
 connectToMongo();
 
 const app = express();
-const port = 5001;
+const port = process.env.PORT || 5001;  // Changed from 5001 to use environment variable
 
 //if we want to use the req.body then have to use the middleware -> express.json(), and to use middleware we use the "app.use" , now can deal with the json, can make request in json by sending content-type application/json
 
@@ -51,4 +51,6 @@ app.use("/api/notes", require("./routes/notes"));
 app.use("/api/drawings", drawingsRouter);
 app.use('/api/auth', require('./routes/socialAuth'));
 
-app.listen(port);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
