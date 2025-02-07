@@ -15,12 +15,32 @@ const Login = ({ showAlert }) => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
+    const userParam = params.get('user');
+    const error = params.get('error');
+    
+    if (error) {
+      showAlert("Authentication failed. Please try again.", "error");
+      return;
+    }
     
     if (token) {
-      login(token);
+      let userData;
+      if (userParam) {
+        try {
+          userData = JSON.parse(decodeURIComponent(userParam));
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
+      }
+      
+      login(token, userData);
       window.history.replaceState({}, document.title, '/login');
       showAlert("Successfully logged in!", "success");
-      navigate('/');
+      
+      // Handle any pending items before redirecting
+      savePendingItems(token).then(redirectPath => {
+        navigate(redirectPath || '/about');
+      });
     }
   }, [login, navigate, showAlert]);
 

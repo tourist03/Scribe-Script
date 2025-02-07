@@ -184,14 +184,36 @@ router.get('/github/callback',
   }),
   function(req, res) {
     try {
-      const token = jwt.sign({ user: { id: req.user.id } }, JWT_SECRET);
-      res.redirect(`https://scribe-script.vercel.app/login?token=${token}`);
+      const data = {
+        user: {
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email
+        }
+      };
+      const authToken = jwt.sign(data, JWT_SECRET);
+      res.redirect(`https://scribe-script.vercel.app/login?token=${authToken}&user=${encodeURIComponent(JSON.stringify(data.user))}`);
     } catch (error) {
-      res.redirect('https://scribe-script.vercel.app/login');
+      console.error('Auth callback error:', error);
+      res.redirect('https://scribe-script.vercel.app/login?error=auth_failed');
     }
   }
 );
 
 // Similar callback routes for Microsoft...
+
+// Verify token endpoint
+router.get('/verify', fetchUser, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+    res.json({ user });
+  } catch (error) {
+    console.error('Token verification error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 module.exports = router;

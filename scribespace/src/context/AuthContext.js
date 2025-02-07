@@ -30,7 +30,8 @@ export const AuthProvider = ({ children }) => {
         headers: {
           'Content-Type': 'application/json',
           'auth-token': token
-        }
+        },
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -39,10 +40,13 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
       } else {
         localStorage.removeItem('token');
+        setUser(null);
         setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
+      localStorage.removeItem('token');
+      setUser(null);
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
@@ -51,8 +55,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = (token, userData) => {
     localStorage.setItem('token', token);
-    setUser(userData);
+    if (userData) {
+      setUser(userData);
+    }
     setIsAuthenticated(true);
+    checkAuthStatus(); // Verify the token immediately after login
   };
 
   const logout = () => {
