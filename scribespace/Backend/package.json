@@ -4,7 +4,8 @@
   "description": "ScribeSpace: A versatile cloud-based platform for seamless writing and drawing, enabling creativity and productivity anytime, anywhere.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "Tourist03",
   "license": "ISC",
@@ -18,5 +19,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
